@@ -2,5 +2,6 @@ module.exports = {
 	AuthenticationController: require('./authentication.controller'),
 	UserController: require('./user.controller'),
 	FileController: require('./file.controller'),
-	SurveyController: require('./survey.controller')
+	SurveyController: require('./survey.controller'),
+	ReleaseController: require('./release.controller')
 };

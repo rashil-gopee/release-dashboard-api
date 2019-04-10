@@ -9,6 +9,8 @@ var mongoose = require('mongoose'),
 	methodOverride = require('method-override'),
 	app = express();
 
+var JiraClient = require('jira-connector');
+
 // Database Setup
 
 // Using `mongoose.connect`...

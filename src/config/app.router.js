@@ -105,4 +105,8 @@ module.exports = function(app) {
 	});
 
 	restify.serve(srcRoutes, model.permission);
+
+	restify.serve(srcRoutes, model.release, {
+		preRead: controller.ReleaseController.getRelease
+	});
 };
