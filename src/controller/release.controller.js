@@ -7,95 +7,56 @@ var fs = require('fs'),
 mongoose.Promise = global.Promise;
 
 var JiraClient = require('jira-connector');
+const async = require('async');
+
+var jira = new JiraClient({
+	host: 'releasedashboard.atlassian.net',
+	basic_auth: {
+		username: 'rashillgopee@gmail.com',
+		password: 'Hy2c6Ja9GaBaZs8'
+	}
+});
 
 var getRelease = function (req, res, next) {
-	var jira = new JiraClient({
-		host: 'releasedashboard.atlassian.net',
-		basic_auth: {
-			username: 'rashillgopee@gmail.com',
-			password: 'Hy2c6Ja9GaBaZs8'
-		}
-	});
-
-	// jira.issue.getIssue(
-	// 	{
-	// 		issueKey: 'RD-11'
-	// 	},
-	// 	function(error, issue) {
-	// 		console.log('error', error);
-	// 		console.log('issue', issue.fields.fixVersions);
-	// 	}
-	// );
-
-	// jira.issue.getIssuePicker(
-	// 	{
-	// 		query: 'version=AprilOOCR'
-	// 	},
-	// 	function(error, issue) {
-	// 		console.log('error', error);
-	// 		console.log('issue', issue);
-	// 	}
-	// );
-
-	// let query = {
-	// 	jql: 'project = 10001 & fixVersion = AprilOOCR',
-	// 	maxResults: 100,
-	// 	startAt: 0,
-	// 	fields: ['summary', 'description'],
-	// 	fieldsByKeys: false
-	// };
-
-	// jira.search.search(query, (err, issues) => {
-	// 	console.log(issues);
-	// });
-
 	let object;
 
 	jira.project.getAllProjects({}, function (error, projects) {
-		// console.log('error', error);
-		// console.log('projects', projects);
-		// object = JSON.parse(JSON.stringify(projects));
-		object = projects.map(project => {
-			// console.log('Project Id', project.id);
-			jira.project.getVersions(
-				{ projectIdOrKey: project.id },
-				function (error, versions) {
-					// console.log('error', error);
+		object = JSON.parse(JSON.stringify(projects));
 
-					project.versions = JSON.parse(JSON.stringify(versions));
-
-					project.versions.map(version => {
-						let query = {
-							jql: 'project = ' + project.id + ' & fixVersion = ' + version.name,
-							maxResults: 100,
-							startAt: 0,
-							fields: ['summary', 'description'],
-							fieldsByKeys: false
-						};
-
-						jira.search.search(query, (err, issues) => {
-							// console.log(issues);
-							version.issues = JSON.parse(JSON.stringify(issues));
-							return version;
-						});
-
-						// jira.version.getUnresolvedIssueCount(
-						// 	{ versionId: version.id },
-						// 	function(error, issues) {
-						// 		console.log('issues', issues);
-						// 	}
-						// );
-					});
-				}
-			);
-			// console.log('project', projectVersions);
-			return project;
+		async.map(object, getVersions, function (err, results) {
+			console.log('results', results);
+			res.send(results);
 		});
-		// console.log('object', object);
-		// console.log('send');
-		res.send(object);
-		// next();
 	});
 };
+
+function getVersions(project, next) {
+	jira.project.getVersions(
+		{
+			projectIdOrKey: project.id,
+			expand: ['operations']
+		},
+		function (error, versions) {
+			project.versions = JSON.parse(JSON.stringify(versions));
+			async.map(project.versions, getIssues, function (err, results) {
+				next(false, project);
+			});
+		});
+}
+
+function getIssues(version, next) {
+	let query = {
+		jql: 'project = ' + version.projectId + ' & fixVersion = ' + version.name,
+		maxResults: 100,
+		startAt: 0,
+		fields: ['summary', 'description'],
+		fieldsByKeys: false
+	};
+
+	jira.search.search(query, (err, issues) => {
+		version.issues = JSON.parse(JSON.stringify(issues));
+		next(false, version);
+	});
+}
 
 exports.getRelease = getRelease;
