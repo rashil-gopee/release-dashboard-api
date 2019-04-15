@@ -3,16 +3,12 @@ var mongoose = require('mongoose'),
 	sanitizeJson = require('mongoose-sanitize-json'),
 	constant = require('../config/app.constant');
 
-var releaseSchema = new Schema({
+var teamSchema = new Schema({
 	name: {
 		type: String,
-		required: true
-	},
-	releaseDate: {
-		type: Date,
 		required: true
 	}
 });
 
-releaseSchema = releaseSchema.plugin(sanitizeJson);
-module.exports = mongoose.model('Release', releaseSchema);
+teamSchema = teamSchema.plugin(sanitizeJson);
+module.exports = mongoose.model('Team', teamSchema);

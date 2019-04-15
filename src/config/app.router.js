@@ -16,7 +16,7 @@ var mongoose = require('mongoose'),
 var requireAuth = passport.authenticate('jwt', { session: false }),
 	requireLogin = passport.authenticate('local', { session: false });
 
-module.exports = function(app) {
+module.exports = function (app) {
 	// Initializing route groups
 	var apiRoutes = express.Router(),
 		authRoutes = express.Router(),
@@ -88,7 +88,7 @@ module.exports = function(app) {
 	app.use('', srcRoutes);
 
 	restify.serve(srcRoutes, model.user, {
-		preCreate: function(req, res, next) {
+		preCreate: function (req, res, next) {
 			model.user.findOne({ email: req.body.email }, (err, existingUser) => {
 				if (err) {
 					return next(err);
@@ -106,7 +106,11 @@ module.exports = function(app) {
 
 	restify.serve(srcRoutes, model.permission);
 
+	restify.serve(srcRoutes, model.team);
+
 	restify.serve(srcRoutes, model.release, {
 		preRead: controller.ReleaseController.getRelease
 	});
+
+	restify.serve(srcRoutes, model.checklist);
 };

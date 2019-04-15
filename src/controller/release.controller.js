@@ -33,8 +33,7 @@ var getRelease = function (req, res, next) {
 function getVersions(project, next) {
 	jira.project.getVersions(
 		{
-			projectIdOrKey: project.id,
-			expand: ['operations']
+			projectIdOrKey: project.id
 		},
 		function (error, versions) {
 			project.versions = JSON.parse(JSON.stringify(versions));
@@ -59,4 +58,20 @@ function getIssues(version, next) {
 	});
 }
 
+var createVersions = function (req, res, next) {
+	jira.project.getAllProjects({}, function (error, projects) {
+		async.map(projects, createVersion, function (err, results) {
+			console.log('results', results);
+			res.send(results);
+		});
+	});
+};
+
+function createVersion(version) {
+	jira.version.createVersion(version, function (error, response) {
+		console.log('response', response);
+	});
+}
+
 exports.getRelease = getRelease;
+exports.createVersions = createVersions;
