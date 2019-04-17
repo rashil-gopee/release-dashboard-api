@@ -59,6 +59,13 @@ module.exports = function(app) {
 		controller.AuthenticationController.verifyToken
 	);
 
+
+	authRoutes.get('', controller.AuthenticationController.oauthToken);
+
+	authRoutes.post('', controller.AuthenticationController.oauthAccessToken);
+	authRoutes.get('/getJIRA', controller.ReleaseController.getJira);
+
+
 	// Test protected route
 	apiRoutes.get('/protected', requireAuth, (req, res) => {
 		res.send({ content: 'The protected test route is functional!' });
