@@ -1,7 +1,6 @@
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	sanitizeJson = require('mongoose-sanitize-json'),
-	constant = require('../config/app.constant');
+	sanitizeJson = require('mongoose-sanitize-json');
 
 var releaseSchema = new Schema({
 	releaseDate: {
@@ -15,6 +14,10 @@ var releaseSchema = new Schema({
 		}, versionId: {
 			type: String
 		}
+	}],
+	checklists: [{
+		checklistId: mongoose.Types.ObjectId,
+		value: Boolean
 	}]
 });
 
