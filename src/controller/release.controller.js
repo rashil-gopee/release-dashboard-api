@@ -1,77 +1,120 @@
-var fs = require('fs'),
-	mongoose = require('mongoose'),
-	multiparty = require('multiparty'),
-	Grid = require('gridfs-stream'),
-	config = require('../config/app.config');
-
-mongoose.Promise = global.Promise;
-
-var JiraClient = require('jira-connector');
+const utils = require('../utils');
 const async = require('async');
 
-var jira = new JiraClient({
-	host: 'releasedashboard.atlassian.net',
-	basic_auth: {
-		username: 'rashillgopee@gmail.com',
-		password: 'Hy2c6Ja9GaBaZs8'
-	}
-});
-
-var getRelease = function (req, res, next) {
-	let object;
-
-	jira.project.getAllProjects({}, function (error, projects) {
-		object = JSON.parse(JSON.stringify(projects));
-
-		async.map(object, getVersions, function (err, results) {
-			console.log('results', results);
-			res.send(results);
+var getReleases = function (req, res, next) {
+	if (Array.isArray(req.erm.result)) {
+		async.map(req.erm.result, getProjects, function (err, results) {
+			next();
 		});
-	});
+	}
+	else {
+		async.map(req.erm.result.projects, getVersion, function (err, results) {
+			next();
+		});
+	}
 };
 
-function getVersions(project, next) {
-	jira.project.getVersions(
+function getProjects(release, next) {
+	async.map(release.projects, getVersion, function (err, results) {
+		next(false, results);
+	});
+}
+
+// function getProject(project, next) {
+// 	utils.jira.getJiraClient().project.getProject({ projectIdOrKey: project.projectId },
+// 		function (error, jiraProject) {
+// 			project.projectDetails = jiraProject;
+// 			next(false, project);
+// 		});
+// }
+
+// function getVersions(project, next) {
+// 	console.log('project', project);
+// 	utils.jira.getJiraClient().project.getVersions(
+// 		{
+// 			projectIdOrKey: project.id
+// 		},
+// 		function (error, versions) {
+// 			project.versions = JSON.parse(JSON.stringify(versions));
+// 			async.map(project.versions, getIssues, function (err, results) {
+// 				next(false, project);
+// 			});
+// 		});
+// }
+
+function getVersion(project, next) {
+	utils.jira.getJiraClient().version.getVersion(
 		{
-			projectIdOrKey: project.id
+			versionId: project.versionId
 		},
-		function (error, versions) {
-			project.versions = JSON.parse(JSON.stringify(versions));
-			async.map(project.versions, getIssues, function (err, results) {
+		function (error, version) {
+			project.versionDetails = version;
+
+			let query = {
+				jql: 'project = ' + project.projectId + ' & fixVersion = ' + version.name,
+				maxResults: 100,
+				startAt: 0,
+				fields: ['summary', 'description', 'status'],
+				fieldsByKeys: false
+			};
+
+			utils.jira.getJiraClient().search.search(query, (err, issues) => {
+				project.versionDetails.issues = JSON.parse(JSON.stringify(issues));
 				next(false, project);
 			});
 		});
 }
 
-function getIssues(version, next) {
-	let query = {
-		jql: 'project = ' + version.projectId + ' & fixVersion = ' + version.name,
-		maxResults: 100,
-		startAt: 0,
-		fields: ['summary', 'description'],
-		fieldsByKeys: false
-	};
+// function getIssues(version, next) {
+// 	console.log('version', version);
+// 	let query = {
+// 		jql: 'project = ' + version.id + ' & fixVersion = ' + version.name,
+// 		maxResults: 100,
+// 		startAt: 0,
+// 		fields: ['summary', 'description'],
+// 		fieldsByKeys: false
+// 	};
 
-	jira.search.search(query, (err, issues) => {
-		version.issues = JSON.parse(JSON.stringify(issues));
-		next(false, version);
-	});
-}
+// 	utils.jira.getJiraClient().search.search(query, (err, issues) => {
+// 		version.issues = JSON.parse(JSON.stringify(issues));
+// 		next(false, version);
+// 	});
+// }
 
 var createVersions = function (req, res, next) {
-	jira.project.getAllProjects({}, function (error, projects) {
-		async.map(projects, createVersion, function (err, results) {
-			console.log('results', results);
-			res.send(results);
-		});
+	var versions = [];
+
+	for (var i = 0; i < req.body.projects.length; i++) {
+		var version = {
+			name: req.body.name,
+			description: req.body.description,
+			projectId: req.body.projects[i].projectId,
+			startDate: req.body.startDate,
+			releaseDate: req.body.releaseDate
+		};
+
+		versions.push(version);
+	}
+
+	async.map(versions, createVersion, function (err, results) {
+		for (var i = 0; i < results.length; i++) {
+			req.body.projects[i].versionId = results[i].versionId;
+		}
+		next();
 	});
 };
 
-function createVersion(version) {
-	jira.version.createVersion(version, function (error, response) {
-		console.log('response', response);
+function createVersion(version, next) {
+	utils.jira.getJiraClient().version.createVersion({ version: version }, function (error, response) {
+		if (error) {
+			res.send(error);
+		}
+		else {
+			version.versionId = response.id;
+			next(false, version);
+		}
 	});
 }
 
-exports.getRelease = getRelease;
+exports.getReleases = getReleases;
 exports.createVersions = createVersions;

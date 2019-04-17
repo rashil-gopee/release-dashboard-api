@@ -4,7 +4,16 @@ var mongoose = require('mongoose'),
 	constant = require('../config/app.constant');
 
 var teamSchema = new Schema({
+	jiraProjectId: {
+		type: String,
+		required: true,
+		unique: true
+	},
 	name: {
+		type: String,
+		required: true
+	},
+	desc: {
 		type: String,
 		required: true
 	}

@@ -21,7 +21,7 @@ function generateToken(user) {
 //= =======================================
 // Login Route
 //= =======================================
-exports.login = function(req, res, next) {
+exports.login = function (req, res, next) {
 	const userInfo = setUserInfo(req.user);
 
 	res.status(200).json({
@@ -33,7 +33,7 @@ exports.login = function(req, res, next) {
 //= =======================================
 // Registration Route
 //= =======================================
-exports.register = function(req, res, next) {
+exports.register = function (req, res, next) {
 	// Check for registration errors
 	const email = req.body.email;
 	const password = req.body.password;
@@ -94,8 +94,8 @@ exports.register = function(req, res, next) {
 //= =======================================
 
 // Role authorization check
-exports.roleAuthorization = function(requiredRole) {
-	return function(req, res, next) {
+exports.roleAuthorization = function (requiredRole) {
+	return function (req, res, next) {
 		const user = req.user;
 
 		User.findById(user._id, (err, foundUser) => {
@@ -120,7 +120,7 @@ exports.roleAuthorization = function(requiredRole) {
 // Forgot Password Route
 //= =======================================
 
-exports.forgotPassword = function(req, res, next) {
+exports.forgotPassword = function (req, res, next) {
 	console.log('req.body', JSON.stringify(req.body));
 	const email = req.body.email;
 
@@ -163,7 +163,7 @@ exports.forgotPassword = function(req, res, next) {
 					'\n\n' +
 					'If you did not request this, please ignore this email and your password will remain unchanged.\n';
 
-				sendmail(existingUser.email, subject, null, html, function(err, sent) {
+				sendmail(existingUser.email, subject, null, html, function (err, sent) {
 					if (err) return res.sendStatus(400);
 					else
 						return res.status(200).json({
@@ -180,7 +180,7 @@ exports.forgotPassword = function(req, res, next) {
 // Reset Password Route
 //= =======================================
 
-exports.verifyToken = function(req, res, next) {
+exports.verifyToken = function (req, res, next) {
 	console.log('req.params', req.params);
 	User.findOne(
 		{
@@ -215,7 +215,7 @@ exports.verifyToken = function(req, res, next) {
 
 				// Otherwise, send user email confirmation of password change via Mailgun
 				// mailgun.sendEmail(resetUser.email, message);
-				sendmail(resetUser.email, subject, null, html, function(err, sent) {
+				sendmail(resetUser.email, subject, null, html, function (err, sent) {
 					if (err) return res.sendStatus(400);
 					else
 						return res.status(200).json({
@@ -226,4 +226,10 @@ exports.verifyToken = function(req, res, next) {
 			});
 		}
 	).select('+password');
+
+
+
+
 };
+
+

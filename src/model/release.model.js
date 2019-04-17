@@ -4,14 +4,18 @@ var mongoose = require('mongoose'),
 	constant = require('../config/app.constant');
 
 var releaseSchema = new Schema({
-	name: {
-		type: String,
-		required: true
-	},
 	releaseDate: {
 		type: Date,
 		required: true
-	}
+	},
+	projects: [{
+		projectId: {
+			type: String,
+			required: true
+		}, versionId: {
+			type: String
+		}
+	}]
 });
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);
