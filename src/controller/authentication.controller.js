@@ -23,26 +23,26 @@ function generateToken(user) {
 //= =======================================
 var JiraClient = require('jira-connector');
 const OAuth = require('oauth').OAuth;
-const key ='test'
-const jiraurl =	'https://releasedashboard.atlassian.net'
-const host='releasedashboard.atlassian.net'
-let privateKeyData='-----BEGIN RSA PRIVATE KEY-----\n' +
-'MIICXgIBAAKBgQC3rfhjnIsE9aryEJtiu9qr8LVAlzKkydf9qiScqTR2kQsCnnCz\n'+
-'W9Fqk5d2eyGU9R5ybqhyd8tlPFhh0eefRJIA1Z8IfMricsNRxD8ta7ytptWg2MVW\n'+
-'BIj2xXepV9b+js84kCPbn12LFYdB2lOgitgO8t5Mn4zb/anrkzklEjsUQwIDAQAB\n'+
-'AoGAJAAgF/39rWotKCajHfXtxRd3nwJDddLt15T6eg4b70U8YDYHps/POtFUtW8q\n'+
-'xNRKNGmF8HGUVvI97GZEvI2nA9fZOR6B3CbAaQ8Lut/do2vG0pL/wCtiknLm4x5Z\n'+
-'9wZduu1QSstGOsEvmxZGavGGl6MA3sUxs88E4lyxUqInqcECQQDaqp2aVGoIt2Pq\n'+
-'5P+KIkilduXcBi8IafReOOtLVaCTBfRr2HdMcCeRXkAJoeNWKqFL+mP8PRF53hGX\n'+
-'TCzY5r5hAkEA1wopZnWKW+KZI0G09FjRwTXyYEpMurx1jIwXDRoAw7+DvMEOWtbJ\n'+
-'oQL0lYg9mHS5dBlEA/FIhHXJVMJ49jgtIwJBAMCCDqhNAuDTm3qzyqlwz2Yky+6t\n'+
-'3wBYT5QYJkY3h1uIlYvQkg7QenVHdbdFN+CnPUOnmBj8JoOU1wXNQXpfgmECQQDI\n'+
-'pSSoA3iL78zvxrlvXQiqfQmgqvMZMguEjppbkS2xeBsVnhUk0VDlOXq5o5vFivQX\n'+
-'zhNWkmYVokmvGp3/L799AkEAlsvXgKJqZ4qENDa9yH1QhOPMhx+bABZtLv6E8J9O\n'+
-'y3EUMWMNSV7tBa3mV8p30OD52BC7uS/oFznq5OgyLX9aeg==\n' +
-'-----END RSA PRIVATE KEY-----'
+const key = 'test';
+const jiraurl = 'https://releasedashboard.atlassian.net';
+const host = 'releasedashboard.atlassian.net';
+let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
+	'MIICXgIBAAKBgQC3rfhjnIsE9aryEJtiu9qr8LVAlzKkydf9qiScqTR2kQsCnnCz\n' +
+	'W9Fqk5d2eyGU9R5ybqhyd8tlPFhh0eefRJIA1Z8IfMricsNRxD8ta7ytptWg2MVW\n' +
+	'BIj2xXepV9b+js84kCPbn12LFYdB2lOgitgO8t5Mn4zb/anrkzklEjsUQwIDAQAB\n' +
+	'AoGAJAAgF/39rWotKCajHfXtxRd3nwJDddLt15T6eg4b70U8YDYHps/POtFUtW8q\n' +
+	'xNRKNGmF8HGUVvI97GZEvI2nA9fZOR6B3CbAaQ8Lut/do2vG0pL/wCtiknLm4x5Z\n' +
+	'9wZduu1QSstGOsEvmxZGavGGl6MA3sUxs88E4lyxUqInqcECQQDaqp2aVGoIt2Pq\n' +
+	'5P+KIkilduXcBi8IafReOOtLVaCTBfRr2HdMcCeRXkAJoeNWKqFL+mP8PRF53hGX\n' +
+	'TCzY5r5hAkEA1wopZnWKW+KZI0G09FjRwTXyYEpMurx1jIwXDRoAw7+DvMEOWtbJ\n' +
+	'oQL0lYg9mHS5dBlEA/FIhHXJVMJ49jgtIwJBAMCCDqhNAuDTm3qzyqlwz2Yky+6t\n' +
+	'3wBYT5QYJkY3h1uIlYvQkg7QenVHdbdFN+CnPUOnmBj8JoOU1wXNQXpfgmECQQDI\n' +
+	'pSSoA3iL78zvxrlvXQiqfQmgqvMZMguEjppbkS2xeBsVnhUk0VDlOXq5o5vFivQX\n' +
+	'zhNWkmYVokmvGp3/L799AkEAlsvXgKJqZ4qENDa9yH1QhOPMhx+bABZtLv6E8J9O\n' +
+	'y3EUMWMNSV7tBa3mV8p30OD52BC7uS/oFznq5OgyLX9aeg==\n' +
+	'-----END RSA PRIVATE KEY-----';
 var REQUEST_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/request-token';
-var ACCESS_TOKEN_URL = jiraurl +'/plugins/servlet/oauth/access-token';
+var ACCESS_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/access-token';
 var AUTHORIZE_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/authorize?oauth_token=';
 var OAUTH_VERSION = '1.0';
 var HASH_VERSION = 'RSA-SHA1';
@@ -50,7 +50,7 @@ var HASH_VERSION = 'RSA-SHA1';
 //= =======================================
 // Login Route
 //= =======================================
-exports.login = function(req, res, next) {
+exports.login = function (req, res, next) {
 	const userInfo = setUserInfo(req.user);
 
 	res.status(200).json({
@@ -62,7 +62,7 @@ exports.login = function(req, res, next) {
 //= =======================================
 // Registration Route
 //= =======================================
-exports.register = function(req, res, next) {
+exports.register = function (req, res, next) {
 	// Check for registration errors
 	const email = req.body.email;
 	const password = req.body.password;
@@ -123,8 +123,8 @@ exports.register = function(req, res, next) {
 //= =======================================
 
 // Role authorization check
-exports.roleAuthorization = function(requiredRole) {
-	return function(req, res, next) {
+exports.roleAuthorization = function (requiredRole) {
+	return function (req, res, next) {
 		const user = req.user;
 
 		User.findById(user._id, (err, foundUser) => {
@@ -149,7 +149,7 @@ exports.roleAuthorization = function(requiredRole) {
 // Forgot Password Route
 //= =======================================
 
-exports.forgotPassword = function(req, res, next) {
+exports.forgotPassword = function (req, res, next) {
 	console.log('req.body', JSON.stringify(req.body));
 	const email = req.body.email;
 
@@ -192,7 +192,7 @@ exports.forgotPassword = function(req, res, next) {
 					'\n\n' +
 					'If you did not request this, please ignore this email and your password will remain unchanged.\n';
 
-				sendmail(existingUser.email, subject, null, html, function(err, sent) {
+				sendmail(existingUser.email, subject, null, html, function (err, sent) {
 					if (err) return res.sendStatus(400);
 					else
 						return res.status(200).json({
@@ -209,7 +209,7 @@ exports.forgotPassword = function(req, res, next) {
 // Reset Password Route
 //= =======================================
 
-exports.verifyToken = function(req, res, next) {
+exports.verifyToken = function (req, res, next) {
 	console.log('req.params', req.params);
 	User.findOne(
 		{
@@ -244,7 +244,7 @@ exports.verifyToken = function(req, res, next) {
 
 				// Otherwise, send user email confirmation of password change via Mailgun
 				// mailgun.sendEmail(resetUser.email, message);
-				sendmail(resetUser.email, subject, null, html, function(err, sent) {
+				sendmail(resetUser.email, subject, null, html, function (err, sent) {
 					if (err) return res.sendStatus(400);
 					else
 						return res.status(200).json({
@@ -255,48 +255,52 @@ exports.verifyToken = function(req, res, next) {
 			});
 		}
 	).select('+password');
+
+
+
+
 };
 
 //= =======================================
 // OAUth Get Route
 //= =======================================
-exports.oauthToken = function(req, res, next) {
+exports.oauthToken = function (req, res, next) {
 
 	let consumer = new OAuth(REQUEST_TOKEN_URL,
 		ACCESS_TOKEN_URL,
 		key,
 		privateKeyData,
 		OAUTH_VERSION,
-		"http://localhost:8080/sessions/callback",
+		'http://localhost:8080/sessions/callback',
 		HASH_VERSION,
 		null,
-		"");
+		'');
 
-	consumer.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
-		if(error) {
+	consumer.getOAuthRequestToken(function (error, oauth_token, oauth_token_secret, results) {
+		if (error) {
 			throw new Error(([error.statusCode, error.data].join(': ')).bold.red);
-		} else { 
-			console.log('Visit:'.bold.green)
-			console.log((AUTHORIZE_TOKEN_URL + oauth_token))		
-			console.log(oauth_token)
-			console.log(oauth_token_secret)
+		} else {
+			console.log('Visit:'.bold.green);
+			console.log((AUTHORIZE_TOKEN_URL + oauth_token));
+			console.log(oauth_token);
+			console.log(oauth_token_secret);
 			res.status(200).json({
-				url:AUTHORIZE_TOKEN_URL + oauth_token,
-				token_secret:oauth_token_secret
+				url: AUTHORIZE_TOKEN_URL + oauth_token,
+				token_secret: oauth_token_secret
 			});
 		}
-		});	
-}
+	});
+};
 
 
 //= =======================================
 // OAUth Post Route
 //= =======================================
 
-exports.oauthAccessToken = function(req, res, next) {
+exports.oauthAccessToken = function (req, res, next) {
 	const token = req.body.token;
-	const token_secret= req.body.tokenSecret;
-	const oauth_verifier=req.body.oauthVerifier;
+	const token_secret = req.body.tokenSecret;
+	const oauth_verifier = req.body.oauthVerifier;
 	JiraClient.oauth_util.swapRequestTokenWithAccessToken({
 		host: host,
 		oauth: {
@@ -307,25 +311,19 @@ exports.oauthAccessToken = function(req, res, next) {
 			private_key: privateKeyData
 		}
 	}, function (error, accessToken) {
-		if(accessToken){
-		var token=jwt.sign(accessToken,token_secret)
-		model.auth.create({ jwtToken:token,accesstoken: accessToken,secretToken:token_secret}, (err, response) => {
-			if (err) {
-				return next(err);
-			}
-			if (response) {
-				res.status(200).json({
-					token:token
-				});
-			} 
-			next();
-		});
-	}
+		if (accessToken) {
+			var token = jwt.sign(accessToken, token_secret);
+			model.auth.create({ jwtToken: token, accesstoken: accessToken, secretToken: token_secret }, (err, response) => {
+				if (err) {
+					return next(err);
+				}
+				if (response) {
+					res.status(200).json({
+						token: token
+					});
+				}
+				next();
+			});
+		}
 	});
-	
-}
-
-
-//= =======================================
-// OAUth Test get Route
-//= =======================================
+};

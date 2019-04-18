@@ -16,7 +16,7 @@ var mongoose = require('mongoose'),
 var requireAuth = passport.authenticate('jwt', { session: false }),
 	requireLogin = passport.authenticate('local', { session: false });
 
-module.exports = function(app) {
+module.exports = function (app) {
 	// Initializing route groups
 	var apiRoutes = express.Router(),
 		authRoutes = express.Router(),
@@ -24,6 +24,7 @@ module.exports = function(app) {
 		srcRoutes = express.Router(),
 		fileRoutes = express.Router(),
 		surveyRoutes = express.Router(),
+		projectRoutes = express.Router(),
 		permissionRoutes = express.Router();
 
 	// Set url for API group routes
@@ -37,27 +38,35 @@ module.exports = function(app) {
 
 	apiRoutes.use('/permission', permissionRoutes);
 
+	apiRoutes.use('/project', projectRoutes);
+
 	// Registration route
 	authRoutes.post('/register', controller.AuthenticationController.register);
 
+	// authRoutes.get('', controller.AuthenticationController);
+
+	// authRoutes.post('', controller.AuthenticationController);
+
+
+
 	// Login route
-	authRoutes.post(
-		'/login',
-		requireLogin,
-		controller.AuthenticationController.login
-	);
+	// authRoutes.post(
+	// 	'/login',
+	// 	requireLogin,
+	// 	controller.AuthenticationController.login
+	// );
 
-	// Password reset request route (generate/send token)
-	authRoutes.post(
-		'/forgot-password',
-		controller.AuthenticationController.forgotPassword
-	);
+	// // Password reset request route (generate/send token)
+	// authRoutes.post(
+	// 	'/forgot-password',
+	// 	controller.AuthenticationController.forgotPassword
+	// );
 
-	// Password reset route (change password using token)
-	authRoutes.post(
-		'/reset-password/:token',
-		controller.AuthenticationController.verifyToken
-	);
+	// // Password reset route (change password using token)
+	// authRoutes.post(
+	// 	'/reset-password/:token',
+	// 	controller.AuthenticationController.verifyToken
+	// );
 
 
 	authRoutes.get('', controller.AuthenticationController.oauthToken);
@@ -95,7 +104,7 @@ module.exports = function(app) {
 	app.use('', srcRoutes);
 
 	restify.serve(srcRoutes, model.user, {
-		preCreate: function(req, res, next) {
+		preCreate: function (req, res, next) {
 			model.user.findOne({ email: req.body.email }, (err, existingUser) => {
 				if (err) {
 					return next(err);
@@ -113,7 +122,17 @@ module.exports = function(app) {
 
 	restify.serve(srcRoutes, model.permission);
 
+	restify.serve(srcRoutes, model.team);
+
 	restify.serve(srcRoutes, model.release, {
-		preRead: controller.ReleaseController.getRelease
+		// preRead: controller.ReleaseController.getRelease,
+		preCreate: controller.ReleaseController.createVersions,
+		postRead: controller.ReleaseController.getReleases
 	});
+
+	// restify.serve(srcRoutes, model.release);
+
+	restify.serve(srcRoutes, model.checklist);
+
+	projectRoutes.get('', controller.ProjectController.getProjects);
 };

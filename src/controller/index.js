@@ -3,5 +3,6 @@ module.exports = {
 	UserController: require('./user.controller'),
 	FileController: require('./file.controller'),
 	SurveyController: require('./survey.controller'),
-	ReleaseController: require('./release.controller')
+	ReleaseController: require('./release.controller'),
+	ProjectController: require('./project.controller')
 };
