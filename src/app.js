@@ -20,8 +20,8 @@ var promise = mongoose.connect(config.mongodb, {
 });
 
 promise
-	.then(function(db) {
-		insertDefaultUser();
+	.then(function (db) {
+		// insertDefaultUser();
 
 		app.use(bodyParser.json()); // Send JSON responses
 		app.use(bodyParser.urlencoded({ extended: true })); // Parses urlencoded bodies
@@ -35,7 +35,7 @@ promise
 
 		router(app);
 
-		app.listen(config.port, function() {
+		app.listen(config.port, function () {
 			console.log(
 				'Release Dashboard API service is listening on port',
 				config.port
@@ -46,17 +46,17 @@ promise
 		console.log('err', err);
 	});
 
-function insertDefaultUser() {
-	var User = model.user;
-	var defaultUser = new User({
-		email: 'admin@test.com',
-		password: 'admin123',
-		role: 'SuperAdmin'
-	});
+// function insertDefaultUser() {
+// 	var User = model.user;
+// 	var defaultUser = new User({
+// 		email: 'admin@test.com',
+// 		password: 'admin123',
+// 		role: 'SuperAdmin'
+// 	});
 
-	User.findOne({
-		email: defaultUser.email
-	}).exec(function(err, user) {
-		if (!user) defaultUser.save();
-	});
-}
+// 	User.findOne({
+// 		email: defaultUser.email
+// 	}).exec(function(err, user) {
+// 		if (!user) defaultUser.save();
+// 	});
+// }

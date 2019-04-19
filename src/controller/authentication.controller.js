@@ -10,6 +10,9 @@ var jwt = require('jsonwebtoken'),
 	getRole = helper.getRole,
 	config = require('../config/app.config');
 
+const constant = require('../config/app.constant');
+const ROLE_SUPER_ADMIN = constant.ROLE_SUPER_ADMIN;
+
 // Generate JWT
 // TO-DO Add issuer and audience
 function generateToken(user) {
@@ -146,122 +149,6 @@ exports.roleAuthorization = function (requiredRole) {
 };
 
 //= =======================================
-// Forgot Password Route
-//= =======================================
-
-exports.forgotPassword = function (req, res, next) {
-	console.log('req.body', JSON.stringify(req.body));
-	const email = req.body.email;
-
-	User.findOne({ email }, (err, existingUser) => {
-		// If user is not found, return error
-		if (err || existingUser == null) {
-			res.status(422).json({
-				error:
-					'Your request could not be processed as entered. Please try again.'
-			});
-			return next(err);
-		}
-
-		// If user is found, generate and save resetToken
-
-		// Generate a token with Crypto
-		crypto.randomBytes(48, (err, buffer) => {
-			const resetToken = buffer.toString('hex');
-			if (err) {
-				return next(err);
-			}
-
-			existingUser.resetPasswordToken = resetToken;
-			existingUser.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-			existingUser.save(err => {
-				// If error in saving token, return it
-				if (err) {
-					return next(err);
-				}
-
-				var subject = 'Reset Password';
-				var html =
-					'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n';
-				html +=
-					'Please click on the following link, or paste this into your browser to complete the process:\n\n';
-				html +=
-					'http://localhost:4200/reset-password?token=' +
-					resetToken +
-					'\n\n' +
-					'If you did not request this, please ignore this email and your password will remain unchanged.\n';
-
-				sendmail(existingUser.email, subject, null, html, function (err, sent) {
-					if (err) return res.sendStatus(400);
-					else
-						return res.status(200).json({
-							message:
-								'Please check your email for the link to reset your password.'
-						});
-				});
-			});
-		});
-	});
-};
-
-//= =======================================
-// Reset Password Route
-//= =======================================
-
-exports.verifyToken = function (req, res, next) {
-	console.log('req.params', req.params);
-	User.findOne(
-		{
-			resetPasswordToken: req.params.token,
-			resetPasswordExpires: { $gt: Date.now() }
-		},
-		(err, resetUser) => {
-			// If query returned no results, token expired or was invalid. Return error.
-			if (!resetUser) {
-				return res.status(422).json({
-					error:
-						'Your token has expired. Please attempt to reset your password again.'
-				});
-			}
-
-			// Otherwise, save new password and clear resetToken from database
-			resetUser.password = req.body.password;
-			resetUser.resetPasswordToken = undefined;
-			resetUser.resetPasswordExpires = undefined;
-
-			resetUser.save(err => {
-				if (err) {
-					return next(err);
-				}
-
-				// If password change saved successfully, alert user via email
-
-				var subject = 'Password Changed';
-				var html =
-					'You are receiving this email because you changed your password. \n\n' +
-					'If you did not request this change, please contact us immediately.';
-
-				// Otherwise, send user email confirmation of password change via Mailgun
-				// mailgun.sendEmail(resetUser.email, message);
-				sendmail(resetUser.email, subject, null, html, function (err, sent) {
-					if (err) return res.sendStatus(400);
-					else
-						return res.status(200).json({
-							message:
-								'Password changed successfully. Please login with your new password.'
-						});
-				});
-			});
-		}
-	).select('+password');
-
-
-
-
-};
-
-//= =======================================
 // OAUth Get Route
 //= =======================================
 exports.oauthToken = function (req, res, next) {
@@ -298,13 +185,13 @@ exports.oauthToken = function (req, res, next) {
 //= =======================================
 
 exports.oauthAccessToken = function (req, res, next) {
-	const token = req.body.token;
-	const token_secret = req.body.tokenSecret;
-	const oauth_verifier = req.body.oauthVerifier;
+	const oauth_token = req.body.oauth_token;
+	const token_secret = req.body.token_secret;
+	const oauth_verifier = req.body.oauth_verifier;
 	JiraClient.oauth_util.swapRequestTokenWithAccessToken({
 		host: host,
 		oauth: {
-			token: token,
+			token: oauth_token,
 			token_secret: token_secret,
 			oauth_verifier: oauth_verifier,
 			consumer_key: key,
@@ -312,18 +199,71 @@ exports.oauthAccessToken = function (req, res, next) {
 		}
 	}, function (error, accessToken) {
 		if (accessToken) {
-			var token = jwt.sign(accessToken, token_secret);
-			model.auth.create({ jwtToken: token, accesstoken: accessToken, secretToken: token_secret }, (err, response) => {
-				if (err) {
-					return next(err);
+			console.log('accessToken', accessToken);
+
+			var jira = new JiraClient({
+				host: host,
+				oauth: {
+					consumer_key: key,
+					private_key: privateKeyData,
+					token: accessToken,
+					token_secret: token_secret
 				}
-				if (response) {
-					res.status(200).json({
-						token: token
-					});
-				}
-				next();
 			});
+
+			jira.myself.getMyself(
+				{
+				},
+				function (error, myself) {
+					console.log('error', error);
+					console.log('myself', myself);
+					console.log('accountId', myself.accountId);
+					const user = {
+						jiraAccountId: myself.accountId,
+						tokenSecret: token_secret
+					};
+
+					// if (model.user.count({ role: ROLE_SUPER_ADMIN }) == 0)
+					// 	user.role = ROLE_SUPER_ADMIN;
+
+					model.user.count({ name: 'anand' }, function (err, count) {
+						// console.log('Count is ' + c);
+						if (count == 0)
+							user.role = ROLE_SUPER_ADMIN;
+					});
+
+					var query = { jiraAccountId: user.jiraAccountId },
+						options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+					// Find the document
+					try {
+						model.user.findOneAndUpdate(query, user, options, function (error, result) {
+							if (error) return;
+
+							// do something with the document
+							console.log('result', result);
+
+							var jwtInfo = {
+								jiraAccountId: user.jiraAccountId,
+								token: accessToken
+							};
+
+							for (var k in myself) user[k] = myself[k];
+							res.status(200).json({
+								token: `Bearer ${jwt.sign(jwtInfo, config.secret)}`,
+								user: user
+							});
+						});
+						// model.user.create(user);
+					} catch (e) { console.log(e); }
+
+				}
+			);
+
+		}
+		else {
+			console.log(error);
+			res.send(401, error);
 		}
 	});
 };

@@ -14,13 +14,12 @@ var mongoose = require('mongoose'),
 
 var UserSchema = new Schema(
 	{
-		email: {
+		jiraAccountId: {
 			type: String,
-			lowercase: true,
 			unique: true,
 			required: true
 		},
-		password: {
+		tokenSecret: {
 			type: String,
 			required: true,
 			select: false
@@ -34,52 +33,10 @@ var UserSchema = new Schema(
 				ROLE_USER
 			],
 			default: ROLE_USER
-		},
-		status: {
-			type: String,
-			enum: ['Active', 'Deactivated', 'Pending'],
-			default: 'Active'
-		},
-		resetPasswordToken: {
-			type: String
-		},
-		resetPasswordExpires: {
-			type: Date
 		}
 	},
 	{ timestamps: true }
 );
-
-// = =============================== User ORM Methods =
-// =============================== Pre-save of user to database, hash password
-// if password is modified or new
-UserSchema.pre('save', function(next) {
-	var user = this,
-		SALT_FACTOR = 5;
-
-	if (!user.isModified('password')) return next();
-
-	bcrypt.genSalt(SALT_FACTOR, (err, salt) => {
-		if (err) return next(err);
-
-		bcrypt.hash(user.password, salt, null, (err, hash) => {
-			if (err) return next(err);
-			user.password = hash;
-			next();
-		});
-	});
-});
-
-// Method to compare password for login
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-	bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-		if (err) {
-			return cb(err);
-		}
-
-		cb(null, isMatch);
-	});
-};
 
 UserSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('User', UserSchema);

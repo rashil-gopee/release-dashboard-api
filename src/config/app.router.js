@@ -72,7 +72,7 @@ module.exports = function (app) {
 	authRoutes.get('', controller.AuthenticationController.oauthToken);
 
 	authRoutes.post('', controller.AuthenticationController.oauthAccessToken);
-	authRoutes.get('/getJIRA', controller.ReleaseController.getJira);
+	// authRoutes.get('/getJIRA', controller.ReleaseController.getJira);
 
 
 	// Test protected route
