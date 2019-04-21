@@ -19,10 +19,14 @@ var UserSchema = new Schema(
 			unique: true,
 			required: true
 		},
-		tokenSecret: {
-			type: String,
-			required: true,
-			select: false
+		// tokenSecret: {
+		// 	type: String,
+		// 	required: true,
+		// 	select: false
+		// },
+		authId: {
+			type: mongoose.Types.ObjectId,
+			required: true
 		},
 		role: {
 			type: String,

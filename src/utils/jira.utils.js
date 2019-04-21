@@ -17,59 +17,53 @@ const privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'zhNWkmYVokmvGp3/L799AkEAlsvXgKJqZ4qENDa9yH1QhOPMhx+bABZtLv6E8J9O\n' +
 	'y3EUMWMNSV7tBa3mV8p30OD52BC7uS/oFznq5OgyLX9aeg==\n' +
 	'-----END RSA PRIVATE KEY-----';
+const config = require('../config/app.config');
 
-exports.getJira = function (req, res, next) {
-	const jwtToken = req.body.jwtToken;
-	model.auth.findOne({ jwtToken: jwtToken }, (err, token) => {
-		if (err) {
-			console.log(err);
-			return next(err);
-		}
 
-		// If user is not unique, return error
-		if (token) {
-			var token_secret = token.secretToken;
-			var access_token = jwt.decode(jwtToken, token_secret);
+var jiraClient = null;
+exports.getJiraClient = function (req, res, next) {
+	if (jiraClient != null) {
+		var authHeader = req.headers['authorization'];
+		// console.log('authHeader', authHeader);
+		if (authHeader != null && authHeader.startsWith('Bearer')) {
+			var jwtInfo = jwt.decode(authHeader.split(' ')[1], config.secret);
+			console.log('jwtInfo', jwtInfo);
+			model.auth.findOne(jwtInfo.authId, function (err, auth) {
+				if (err)
+					res.status(401).send(err);
 
-			var jira = new JiraClient({
-				host: host,
-				oauth: {
-					consumer_key: key,
-					private_key: privateKeyData,
-					token: access_token,
-					token_secret: token_secret
-				}
+				jira = new JiraClient({
+					host: host,
+					oauth: {
+						consumer_key: key,
+						private_key: privateKeyData,
+						token: jwtInfo.access_token,
+						token_secret: auth.tokenSecret
+					}
+				});
 			});
-			jira.issue.getIssue(
-				{
-					issueKey: 'RD-11'
-				},
-				function (error, issue) {
-					console.log('error', error);
-					console.log('issue', issue.fields.fixVersions);
-				}
-			);
-		} else next();
-	});
-};
-
-var jira = null;
-
-var getJiraClient = function () {
-	if (jira == null) {
-		jira = new JiraClient({
-			host: 'releasedashboard.atlassian.net',
-			basic_auth: {
-				username: 'rashillgopee@gmail.com',
-				password: 'Hy2c6Ja9GaBaZs8'
-			}
-		});
-
-		// jira.version.ge
+		}
 	}
-	return jira;
+	return jiraClient;
 };
 
+// var jira = null;
+
+// var getJiraClient = function () {
+// 	if (jira == null) {
+// 		jira = new JiraClient({
+// 			host: 'releasedashboard.atlassian.net',
+// 			basic_auth: {
+// 				username: 'rashillgopee@gmail.com',
+// 				password: 'Hy2c6Ja9GaBaZs8'
+// 			}
+// 		});
+
+// 		// jira.version.ge
+// 	}
+// 	return jira;
+// };
 
 
-exports.getJiraClient = getJiraClient;
+
+// exports.getJiraClient = getJiraClient;

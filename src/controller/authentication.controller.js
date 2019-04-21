@@ -29,6 +29,7 @@ const OAuth = require('oauth').OAuth;
 const key = 'test';
 const jiraurl = 'https://releasedashboard.atlassian.net';
 const host = 'releasedashboard.atlassian.net';
+
 let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'MIICXgIBAAKBgQC3rfhjnIsE9aryEJtiu9qr8LVAlzKkydf9qiScqTR2kQsCnnCz\n' +
 	'W9Fqk5d2eyGU9R5ybqhyd8tlPFhh0eefRJIA1Z8IfMricsNRxD8ta7ytptWg2MVW\n' +
@@ -44,6 +45,7 @@ let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'zhNWkmYVokmvGp3/L799AkEAlsvXgKJqZ4qENDa9yH1QhOPMhx+bABZtLv6E8J9O\n' +
 	'y3EUMWMNSV7tBa3mV8p30OD52BC7uS/oFznq5OgyLX9aeg==\n' +
 	'-----END RSA PRIVATE KEY-----';
+
 var REQUEST_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/request-token';
 var ACCESS_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/access-token';
 var AUTHORIZE_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/authorize?oauth_token=';
@@ -171,10 +173,18 @@ exports.oauthToken = function (req, res, next) {
 			console.log((AUTHORIZE_TOKEN_URL + oauth_token));
 			console.log(oauth_token);
 			console.log(oauth_token_secret);
-			res.status(200).json({
-				url: AUTHORIZE_TOKEN_URL + oauth_token,
-				token_secret: oauth_token_secret
+
+
+			model.auth.create({ oauthToken: oauth_token, tokenSecret: oauth_token_secret }, function (err, auth) {
+				if (auth) {
+					res.status(200).json({
+						url: AUTHORIZE_TOKEN_URL + oauth_token,
+						// token_secret: oauth_token_secret
+					});
+				}
+				else res.status(401).send(err);
 			});
+
 		}
 	});
 };
@@ -186,84 +196,98 @@ exports.oauthToken = function (req, res, next) {
 
 exports.oauthAccessToken = function (req, res, next) {
 	const oauth_token = req.body.oauth_token;
-	const token_secret = req.body.token_secret;
+	// const token_secret = req.body.token_secret;
 	const oauth_verifier = req.body.oauth_verifier;
-	JiraClient.oauth_util.swapRequestTokenWithAccessToken({
-		host: host,
-		oauth: {
-			token: oauth_token,
-			token_secret: token_secret,
-			oauth_verifier: oauth_verifier,
-			consumer_key: key,
-			private_key: privateKeyData
-		}
-	}, function (error, accessToken) {
-		if (accessToken) {
-			console.log('accessToken', accessToken);
 
-			var jira = new JiraClient({
+	model.auth.findOne({ oauthToken: oauth_token }, function (err, auth) {
+		if (auth) {
+			console.log(auth);
+
+			JiraClient.oauth_util.swapRequestTokenWithAccessToken({
 				host: host,
 				oauth: {
+					token: oauth_token,
+					token_secret: auth.tokenSecret,
+					oauth_verifier: oauth_verifier,
 					consumer_key: key,
-					private_key: privateKeyData,
-					token: accessToken,
-					token_secret: token_secret
+					private_key: privateKeyData
 				}
-			});
+			}, function (error, access_token) {
+				if (access_token) {
+					console.log('accessToken', access_token);
 
-			jira.myself.getMyself(
-				{
-				},
-				function (error, myself) {
-					console.log('error', error);
-					console.log('myself', myself);
-					console.log('accountId', myself.accountId);
-					const user = {
-						jiraAccountId: myself.accountId,
-						tokenSecret: token_secret
-					};
-
-					// if (model.user.count({ role: ROLE_SUPER_ADMIN }) == 0)
-					// 	user.role = ROLE_SUPER_ADMIN;
-
-					model.user.count({ name: 'anand' }, function (err, count) {
-						// console.log('Count is ' + c);
-						if (count == 0)
-							user.role = ROLE_SUPER_ADMIN;
+					var jira = new JiraClient({
+						host: host,
+						oauth: {
+							consumer_key: key,
+							private_key: privateKeyData,
+							token: access_token,
+							token_secret: auth.tokenSecret
+						}
 					});
 
-					var query = { jiraAccountId: user.jiraAccountId },
-						options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-					// Find the document
-					try {
-						model.user.findOneAndUpdate(query, user, options, function (error, result) {
-							if (error) return;
-
-							// do something with the document
-							console.log('result', result);
-
-							var jwtInfo = {
-								jiraAccountId: user.jiraAccountId,
-								token: accessToken
+					jira.myself.getMyself(
+						{
+						},
+						function (error, myself) {
+							console.log('error', error);
+							console.log('myself', myself);
+							console.log('accountId', myself.accountId);
+							const user = {
+								jiraAccountId: myself.accountId,
+								authId: auth._id
 							};
 
-							for (var k in myself) user[k] = myself[k];
-							res.status(200).json({
-								token: `Bearer ${jwt.sign(jwtInfo, config.secret)}`,
-								user: user
+							model.user.countDocuments({ role: ROLE_SUPER_ADMIN }, function (err, count) {
+								console.log('Count is ' + count);
+								if (count < 1) {
+									user.role = ROLE_SUPER_ADMIN;
+								}
+
+								var query = { jiraAccountId: user.jiraAccountId },
+									options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+								// Find the document
+								try {
+									model.user.findOneAndUpdate(query, user, options, function (error, result) {
+										if (error) return;
+
+										// do something with the document
+										console.log('result', result);
+
+										var jwtInfo = {
+											authId: result._id,
+											access_token: access_token
+										};
+
+										console.log('jwtInfo', jwtInfo);
+
+										for (var k in myself) {
+											if (k != 'accountId')
+												user[k] = myself[k];
+										}
+
+										res.status(200).json({
+											token: `Bearer ${jwt.sign(jwtInfo, config.secret)}`,
+											user: user
+										});
+									});
+									// model.user.create(user);
+								} catch (e) { console.log(e); }
 							});
-						});
-						// model.user.create(user);
-					} catch (e) { console.log(e); }
+						}
+					);
 
 				}
-			);
-
+				else {
+					res.status(401).send(error);
+				}
+			});
 		}
 		else {
-			console.log(error);
-			res.send(401, error);
+			model.auth.deleteOne({ oauthToken: oauth_token }, function (err, deletedAuth) {
+				res.status(401).send(err);
+			});
 		}
 	});
 };

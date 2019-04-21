@@ -4,17 +4,15 @@ var mongoose = require('mongoose'),
 	constant = require('../config/app.constant');
 
 var authSchema = new Schema({
-    jwtToken: {
+	oauthToken: {
 		type: String,
-		required: true
-    },
-    accesstoken: {
+		required: true,
+		unique: true
+	},
+	tokenSecret: {
 		type: String,
-		required: true
-    },
-    secretToken: {
-		type: String,
-		required: true
+		required: true,
+		unique: true
 	}
 });
 
