@@ -1,8 +1,12 @@
 var JiraClient = require('jira-connector');
 const model = require('../model');
-const key = 'test';
-const host = 'releasedashboard.atlassian.net';
-const privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
+const config = require('../config/app.config');
+const jwt = require('jsonwebtoken');
+const JIRA = require('../config/app.config').JIRA;
+
+var jiraClient = null;
+
+let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'MIICXgIBAAKBgQC3rfhjnIsE9aryEJtiu9qr8LVAlzKkydf9qiScqTR2kQsCnnCz\n' +
 	'W9Fqk5d2eyGU9R5ybqhyd8tlPFhh0eefRJIA1Z8IfMricsNRxD8ta7ytptWg2MVW\n' +
 	'BIj2xXepV9b+js84kCPbn12LFYdB2lOgitgO8t5Mn4zb/anrkzklEjsUQwIDAQAB\n' +
@@ -17,53 +21,31 @@ const privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'zhNWkmYVokmvGp3/L799AkEAlsvXgKJqZ4qENDa9yH1QhOPMhx+bABZtLv6E8J9O\n' +
 	'y3EUMWMNSV7tBa3mV8p30OD52BC7uS/oFznq5OgyLX9aeg==\n' +
 	'-----END RSA PRIVATE KEY-----';
-const config = require('../config/app.config');
 
+exports.getJiraClient = function () {
+	return jiraClient;
+};
 
-var jiraClient = null;
-exports.getJiraClient = function (req, res, next) {
-	if (jiraClient != null) {
+exports.createJiraClient = function (req, callback) {
+	if (jiraClient == null) {
 		var authHeader = req.headers['authorization'];
-		// console.log('authHeader', authHeader);
 		if (authHeader != null && authHeader.startsWith('Bearer')) {
-			var jwtInfo = jwt.decode(authHeader.split(' ')[1], config.secret);
-			console.log('jwtInfo', jwtInfo);
-			model.auth.findOne(jwtInfo.authId, function (err, auth) {
-				if (err)
-					res.status(401).send(err);
-
-				jira = new JiraClient({
-					host: host,
+			var jwtInfo = jwt.decode(authHeader.split(' ')[1].trim(), config.secret);
+			model.auth.findOne({ _id: jwtInfo.authId }, function (err, auth) {
+				if (err) {
+					console.log('err', err);
+				}
+				jiraClient = new JiraClient({
+					host: JIRA.HOST,
 					oauth: {
-						consumer_key: key,
+						consumer_key: JIRA.KEY,
 						private_key: privateKeyData,
 						token: jwtInfo.access_token,
 						token_secret: auth.tokenSecret
 					}
 				});
+				callback();
 			});
 		}
 	}
-	return jiraClient;
 };
-
-// var jira = null;
-
-// var getJiraClient = function () {
-// 	if (jira == null) {
-// 		jira = new JiraClient({
-// 			host: 'releasedashboard.atlassian.net',
-// 			basic_auth: {
-// 				username: 'rashillgopee@gmail.com',
-// 				password: 'Hy2c6Ja9GaBaZs8'
-// 			}
-// 		});
-
-// 		// jira.version.ge
-// 	}
-// 	return jira;
-// };
-
-
-
-// exports.getJiraClient = getJiraClient;
