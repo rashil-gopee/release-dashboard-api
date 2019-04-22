@@ -14,11 +14,14 @@ module.exports = {
 		process.env.MONGO_PATH ||
 		'mongodb+srv://dev:mizbTb2MYTqzAZf2@dev-o850d.mongodb.net/release-dashboard?retryWrites=true',
 	port: process.env.PORT || 6500,
-	jira: {
-		host: 'releasedashboard.atlassian.net',
+	JIRA: {
+		HOST: 'releasedashboard.atlassian.net',
 		basic_auth: {
 			username: 'rashillgopee@gmail.com',
 			password: 'Hy2c6Ja9GaBaZs8'
-		}
+		},
+		KEY: 'test',
+		OAUTH_VERSION: '1.0',
+		HASH_VERSION: 'RSA-SHA1',
 	}
 };

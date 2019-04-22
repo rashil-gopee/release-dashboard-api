@@ -1,17 +1,17 @@
 var jwt = require('jsonwebtoken'),
-	crypto = require('crypto'),
 	model = require('../model'),
 	User = model.user,
 	utils = require('../utils'),
-	sendmail = utils.sendmail,
-	// const mailchimp = require('../config/mailchimp');
 	helper = utils.helper,
 	setUserInfo = helper.setUserInfo,
 	getRole = helper.getRole,
 	config = require('../config/app.config');
-
+var JiraClient = require('jira-connector');
+const OAuth = require('oauth').OAuth;
 const constant = require('../config/app.constant');
 const ROLE_SUPER_ADMIN = constant.ROLE_SUPER_ADMIN;
+const JIRA = require('../config/app.config').JIRA;
+
 
 // Generate JWT
 // TO-DO Add issuer and audience
@@ -24,11 +24,9 @@ function generateToken(user) {
 //= =======================================
 // Constant Variables
 //= =======================================
-var JiraClient = require('jira-connector');
-const OAuth = require('oauth').OAuth;
-const key = 'test';
-const jiraurl = 'https://releasedashboard.atlassian.net';
-const host = 'releasedashboard.atlassian.net';
+
+
+const jiraurl = 'https://' + JIRA.HOST;
 
 let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'MIICXgIBAAKBgQC3rfhjnIsE9aryEJtiu9qr8LVAlzKkydf9qiScqTR2kQsCnnCz\n' +
@@ -49,8 +47,8 @@ let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 var REQUEST_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/request-token';
 var ACCESS_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/access-token';
 var AUTHORIZE_TOKEN_URL = jiraurl + '/plugins/servlet/oauth/authorize?oauth_token=';
-var OAUTH_VERSION = '1.0';
-var HASH_VERSION = 'RSA-SHA1';
+// var OAUTH_VERSION = '1.0';
+// var HASH_VERSION = 'RSA-SHA1';
 
 //= =======================================
 // Login Route
@@ -104,7 +102,6 @@ exports.register = function (req, res, next) {
 
 		user.save((err, user) => {
 			if (err) {
-				console.log(err);
 				return next(err);
 			}
 
@@ -157,11 +154,11 @@ exports.oauthToken = function (req, res, next) {
 
 	let consumer = new OAuth(REQUEST_TOKEN_URL,
 		ACCESS_TOKEN_URL,
-		key,
+		JIRA.KEY,
 		privateKeyData,
-		OAUTH_VERSION,
+		JIRA.OAUTH_VERSION,
 		'http://localhost:8080/sessions/callback',
-		HASH_VERSION,
+		JIRA.HASH_VERSION,
 		null,
 		'');
 
@@ -169,12 +166,6 @@ exports.oauthToken = function (req, res, next) {
 		if (error) {
 			throw new Error(([error.statusCode, error.data].join(': ')).bold.red);
 		} else {
-			console.log('Visit:'.bold.green);
-			console.log((AUTHORIZE_TOKEN_URL + oauth_token));
-			console.log(oauth_token);
-			console.log(oauth_token_secret);
-
-
 			model.auth.create({ oauthToken: oauth_token, tokenSecret: oauth_token_secret }, function (err, auth) {
 				if (auth) {
 					res.status(200).json({
@@ -201,25 +192,21 @@ exports.oauthAccessToken = function (req, res, next) {
 
 	model.auth.findOne({ oauthToken: oauth_token }, function (err, auth) {
 		if (auth) {
-			console.log(auth);
-
 			JiraClient.oauth_util.swapRequestTokenWithAccessToken({
-				host: host,
+				host: JIRA.HOST,
 				oauth: {
 					token: oauth_token,
 					token_secret: auth.tokenSecret,
 					oauth_verifier: oauth_verifier,
-					consumer_key: key,
+					consumer_key: JIRA.KEY,
 					private_key: privateKeyData
 				}
 			}, function (error, access_token) {
 				if (access_token) {
-					console.log('accessToken', access_token);
-
 					var jira = new JiraClient({
-						host: host,
+						host: JIRA.HOST,
 						oauth: {
-							consumer_key: key,
+							consumer_key: JIRA.KEY,
 							private_key: privateKeyData,
 							token: access_token,
 							token_secret: auth.tokenSecret
@@ -230,16 +217,12 @@ exports.oauthAccessToken = function (req, res, next) {
 						{
 						},
 						function (error, myself) {
-							console.log('error', error);
-							console.log('myself', myself);
-							console.log('accountId', myself.accountId);
 							const user = {
 								jiraAccountId: myself.accountId,
 								authId: auth._id
 							};
 
 							model.user.countDocuments({ role: ROLE_SUPER_ADMIN }, function (err, count) {
-								console.log('Count is ' + count);
 								if (count < 1) {
 									user.role = ROLE_SUPER_ADMIN;
 								}
@@ -252,15 +235,10 @@ exports.oauthAccessToken = function (req, res, next) {
 									model.user.findOneAndUpdate(query, user, options, function (error, result) {
 										if (error) return;
 
-										// do something with the document
-										console.log('result', result);
-
 										var jwtInfo = {
-											authId: result._id,
+											authId: auth._id,
 											access_token: access_token
 										};
-
-										console.log('jwtInfo', jwtInfo);
 
 										for (var k in myself) {
 											if (k != 'accountId')
