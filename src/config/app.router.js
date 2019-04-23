@@ -109,7 +109,9 @@ module.exports = function (app) {
 
 	restify.serve(srcRoutes, model.permission);
 
-	restify.serve(srcRoutes, model.team);
+	restify.serve(srcRoutes, model.team, {
+		postRead: controller.TeamController.getTeams
+	});
 
 	restify.serve(srcRoutes, model.release, {
 		// preRead: controller.ReleaseController.getRelease,

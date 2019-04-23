@@ -1,20 +1,33 @@
 const utils = require('../utils');
-
-var JiraClient = require('jira-connector');
 const async = require('async');
 
-var verifyProject = function () {
-	let object;
-	utils.jira.getJiraClient().project.getAllProjects({}, function (error, projects) {
-		object = JSON.parse(JSON.stringify(projects));
-
-		async.map(object, getVersions, function (err, results) {
-			console.log('results', results);
-			// res.send(results);
-			return results;
-		});
-
+exports.getTeams = function (req, res, next) {
+	utils.jira.createJiraClient(req, function () {
+		if (Array.isArray(req.erm.result)) {
+			async.map(req.erm.result, getProject, function (err, results) {
+				next();
+			});
+		}
+		else {
+			utils.jira.getJiraClient().project.getProject({ projectIdOrKey: req.erm.result.jiraProjectId },
+				function (error, jiraProject) {
+					for (var k in jiraProject) {
+						if (k != 'issueTypes' && k != 'versions')
+							req.erm.result[k] = jiraProject[k];
+					}
+					next();
+				});
+		}
 	});
 };
 
-exports.verifyProject = verifyProject;
+function getProject(project, next) {
+	utils.jira.getJiraClient().project.getProject({ projectIdOrKey: project.jiraProjectId },
+		function (error, jiraProject) {
+			for (var k in jiraProject) {
+				if (k != 'issueTypes' && k != 'versions')
+					project[k] = jiraProject[k];
+			}
+			next(false, project);
+		});
+}
