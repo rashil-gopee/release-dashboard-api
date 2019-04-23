@@ -14,10 +14,14 @@ var mongoose = require('mongoose'),
 
 var UserSchema = new Schema(
 	{
+		jiraUsername: {
+			type: String,
+			unique: true
+		},
 		jiraAccountId: {
 			type: String,
 			unique: true,
-			required: true
+			// required: true
 		},
 		// tokenSecret: {
 		// 	type: String,

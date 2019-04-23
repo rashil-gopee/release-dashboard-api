@@ -104,7 +104,7 @@ module.exports = function (app) {
 	app.use('', srcRoutes);
 
 	restify.serve(srcRoutes, model.user, {
-		postRead: controller.UserController.getReleases
+		postRead: controller.UserController.getUsers
 	});
 
 	restify.serve(srcRoutes, model.permission);

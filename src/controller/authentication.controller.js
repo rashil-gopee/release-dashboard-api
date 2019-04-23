@@ -217,8 +217,9 @@ exports.oauthAccessToken = function (req, res, next) {
 						{
 						},
 						function (error, myself) {
+							console.log('myself', myself);
 							const user = {
-								jiraAccountId: myself.accountId,
+								jiraUsername: myself.name,
 								authId: auth._id
 							};
 
@@ -227,7 +228,8 @@ exports.oauthAccessToken = function (req, res, next) {
 									user.role = ROLE_SUPER_ADMIN;
 								}
 
-								var query = { jiraAccountId: user.jiraAccountId },
+								console.log('user', user);
+								var query = { jiraUsername: user.jiraUsername },
 									options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
 								try {
@@ -240,8 +242,7 @@ exports.oauthAccessToken = function (req, res, next) {
 										};
 
 										for (var k in myself) {
-											if (k != 'accountId')
-												user[k] = myself[k];
+											user[k] = myself[k];
 										}
 
 										res.status(200).json({
