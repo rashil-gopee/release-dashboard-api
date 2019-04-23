@@ -22,30 +22,51 @@ let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'y3EUMWMNSV7tBa3mV8p30OD52BC7uS/oFznq5OgyLX9aeg==\n' +
 	'-----END RSA PRIVATE KEY-----';
 
+// exports.getJiraClient = function () {
+// 	return jiraClient;
+// };
+
+// exports.createJiraClient = function (req, callback) {
+// 	if (jiraClient == null) {
+// 		var authHeader = req.headers['authorization'];
+// 		if (authHeader != null && authHeader.startsWith('Bearer')) {
+// 			var jwtInfo = jwt.decode(authHeader.split(' ')[1].trim(), config.secret);
+// 			model.auth.findOne({ _id: jwtInfo.authId }, function (err, auth) {
+// 				if (err) {
+// 					console.log('err', err);
+// 				}
+// 				jiraClient = new JiraClient({
+// 					host: JIRA.HOST,
+// 					oauth: {
+// 						consumer_key: JIRA.KEY,
+// 						private_key: privateKeyData,
+// 						token: jwtInfo.access_token,
+// 						token_secret: auth.tokenSecret
+// 					}
+// 				});
+// 				callback();
+// 			});
+// 		}
+// 	}
+// };
+
+var jira = null;
+
 exports.getJiraClient = function () {
-	return jiraClient;
+	if (jira == null) {
+		jira = new JiraClient({
+			host: 'releasedashboard.atlassian.net',
+			basic_auth: {
+				username: 'rashillgopee@gmail.com',
+				password: 'Hy2c6Ja9GaBaZs8'
+			}
+		});
+
+		// jira.version.ge
+	}
+	return jira;
 };
 
-exports.createJiraClient = function (req, callback) {
-	if (jiraClient == null) {
-		var authHeader = req.headers['authorization'];
-		if (authHeader != null && authHeader.startsWith('Bearer')) {
-			var jwtInfo = jwt.decode(authHeader.split(' ')[1].trim(), config.secret);
-			model.auth.findOne({ _id: jwtInfo.authId }, function (err, auth) {
-				if (err) {
-					console.log('err', err);
-				}
-				jiraClient = new JiraClient({
-					host: JIRA.HOST,
-					oauth: {
-						consumer_key: JIRA.KEY,
-						private_key: privateKeyData,
-						token: jwtInfo.access_token,
-						token_secret: auth.tokenSecret
-					}
-				});
-				callback();
-			});
-		}
-	}
-};
+
+
+// exports.getJiraClient = getJiraClient;

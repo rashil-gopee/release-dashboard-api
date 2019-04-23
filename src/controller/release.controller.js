@@ -86,9 +86,9 @@ function getVersion(project, next) {
 // }
 
 var createVersions = function (req, res, next) {
-	utils.jira.createJiraClient(req, function () {
+	// utils.jira.createJiraClient(req, function () {
 		var versions = [];
-
+		console.log(req.body.projects)
 		for (var i = 0; i < req.body.projects.length; i++) {
 			var version = {
 				name: req.body.name,
@@ -97,7 +97,7 @@ var createVersions = function (req, res, next) {
 				startDate: req.body.startDate,
 				releaseDate: req.body.releaseDate
 			};
-
+			console.log(version)
 			versions.push(version);
 		}
 
@@ -107,13 +107,13 @@ var createVersions = function (req, res, next) {
 			}
 			next();
 		});
-	});
+	// });
 };
 
 function createVersion(version, next) {
 	utils.jira.getJiraClient().version.createVersion({ version: version }, function (error, response) {
 		if (error) {
-			res.send(error);
+			console.log(error)
 		}
 		else {
 			version.versionId = response.id;
