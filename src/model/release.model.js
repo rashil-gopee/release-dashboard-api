@@ -7,10 +7,18 @@ var releaseSchema = new Schema({
 		type: Date,
 		required: true
 	},
-	startDate: {
-		type: Date,
-		required: true
-	},
+	projects: [{
+		projectId: {
+			type: String,
+			required: true
+		}, versionId: {
+			type: String
+		}
+	}],
+	checklists: [{
+		checklistId: mongoose.Types.ObjectId,
+		value: Boolean
+	}],
 	devfinish: {
 		type: Date,
 		required: true
@@ -54,19 +62,7 @@ var releaseSchema = new Schema({
 	devsupport: {
 		type: String,
 		required: true
-	},
-	projects: [{
-		projectId: {
-			type: String,
-			required: true
-		}, versionId: {
-			type: String
-		}
-	}],
-	checklists: [{
-		checklistId: mongoose.Types.ObjectId,
-		value: Boolean
-	}]
+	}
 });
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);

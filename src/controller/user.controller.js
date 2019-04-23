@@ -1,24 +1,26 @@
-var model = require('../model'),
-    User = model.user,
-    utils = require('../utils'),
-    helper = utils.helper,
-    setUserInfo = helper.setUserInfo;
+const utils = require('../utils');
+const async = require('async');
+
 
 //= =======================================
 // User Routes
 //= =======================================
-exports.viewProfile = function(req, res, next) {
-    var userId = req.params.userId;
-
-    if (req.user._id.toString() !== userId) { return res.status(401).json({ error: 'You are not authorized to view this user profile.' }); }
-    User.findById(userId, (err, user) => {
-        if (err) {
-            res.status(400).json({ error: 'No user could be found for this ID.' });
-            return next(err);
-        }
-
-        var userToReturn = setUserInfo(user);
-
-        return res.status(200).json({ user: userToReturn });
-    });
+exports.getUsers = function (req, res, next) {
+	// utils.jira.createJiraClient(req, function () {
+	// 	if (Array.isArray(req.erm.result)) {
+	// 		async.map(req.erm.result, getProjects, function (err, results) {
+	// 			next();
+	// 		});
+	// 	}
+	// 	else {
+	// 		async.map(req.erm.result.projects, getVersion, function (err, results) {
+	// 			next();
+	// 		});
+	// 	}
+	// });
+	next();
 };
+
+// function getJiraUserDetails(user){
+// 	utils.jira.getJiraClient().
+// }

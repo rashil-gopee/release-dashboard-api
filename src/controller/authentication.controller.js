@@ -230,10 +230,9 @@ exports.oauthAccessToken = function (req, res, next) {
 								var query = { jiraAccountId: user.jiraAccountId },
 									options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
-								// Find the document
 								try {
 									model.user.findOneAndUpdate(query, user, options, function (error, result) {
-										if (error) return;
+										if (error) res.status(400).send(error);
 
 										var jwtInfo = {
 											authId: auth._id,
@@ -250,7 +249,6 @@ exports.oauthAccessToken = function (req, res, next) {
 											user: user
 										});
 									});
-									// model.user.create(user);
 								} catch (e) { console.log(e); }
 							});
 						}

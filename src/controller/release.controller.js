@@ -89,7 +89,7 @@ var createVersions = function (req, res, next) {
 	utils.jira.createJiraClient(req, function () {
 		var versions = [];
 
-		for (var i = 0; i < req.body.projects.length; i++) {
+		for (let i = 0; i < req.body.projects.length; i++) {
 			var version = {
 				name: req.body.name,
 				description: req.body.description,
@@ -113,7 +113,8 @@ var createVersions = function (req, res, next) {
 function createVersion(version, next) {
 	utils.jira.getJiraClient().version.createVersion({ version: version }, function (error, response) {
 		if (error) {
-			res.send(error);
+			console.log('error', error);
+			// res.send(error);
 		}
 		else {
 			version.versionId = response.id;

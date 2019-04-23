@@ -22,19 +22,19 @@ var nodemon = require('gulp-nodemon');
 //         }));
 // });
 
-gulp.task('default', function() {
-    nodemon({
-        script: 'src/app.js',
-        ext: 'js',
-        env: {
-            PORT: 6500
-        },
-        ignore: ['./node_modules/**']
-    }).on('start', [ /*'test'*/ ], function() {
+gulp.task('default', function () {
+	nodemon({
+		script: 'src/app.js',
+		ext: 'js',
+		env: {
+			PORT: 6500
+		},
+		ignore: ['./node_modules/**']
+	}).on('start', [ /*'test'*/], function () {
 
-    }).on('restart', function() {
+	}).on('restart', function () {
 
-    });
+	});
 });
 
 // gulp.task('dist', function () {

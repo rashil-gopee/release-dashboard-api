@@ -27,25 +27,24 @@ exports.getJiraClient = function () {
 };
 
 exports.createJiraClient = function (req, callback) {
-	if (jiraClient == null) {
-		var authHeader = req.headers['authorization'];
-		if (authHeader != null && authHeader.startsWith('Bearer')) {
-			var jwtInfo = jwt.decode(authHeader.split(' ')[1].trim(), config.secret);
-			model.auth.findOne({ _id: jwtInfo.authId }, function (err, auth) {
-				if (err) {
-					console.log('err', err);
+	var authHeader = req.headers['authorization'];
+	if (authHeader != null && authHeader.startsWith('Bearer')) {
+		var jwtInfo = jwt.decode(authHeader.split(' ')[1].trim(), config.secret);
+		model.auth.findOne({ _id: jwtInfo.authId }, function (err, auth) {
+			if (err) {
+				console.log('err', err);
+			}
+			jiraClient = new JiraClient({
+				host: JIRA.HOST,
+				oauth: {
+					consumer_key: JIRA.KEY,
+					private_key: privateKeyData,
+					token: jwtInfo.access_token,
+					token_secret: auth.tokenSecret
 				}
-				jiraClient = new JiraClient({
-					host: JIRA.HOST,
-					oauth: {
-						consumer_key: JIRA.KEY,
-						private_key: privateKeyData,
-						token: jwtInfo.access_token,
-						token_secret: auth.tokenSecret
-					}
-				});
-				callback();
 			});
-		}
+			// jiraClient.user.getUser
+			callback();
+		});
 	}
 };

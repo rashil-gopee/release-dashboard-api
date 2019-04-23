@@ -104,20 +104,7 @@ module.exports = function (app) {
 	app.use('', srcRoutes);
 
 	restify.serve(srcRoutes, model.user, {
-		preCreate: function (req, res, next) {
-			model.user.findOne({ email: req.body.email }, (err, existingUser) => {
-				if (err) {
-					return next(err);
-				}
-
-				// If user is not unique, return error
-				if (existingUser) {
-					return res
-						.status(422)
-						.send({ error: 'That email address is already in use.' });
-				} else next();
-			});
-		}
+		postRead: controller.UserController.getReleases
 	});
 
 	restify.serve(srcRoutes, model.permission);
