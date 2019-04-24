@@ -219,7 +219,7 @@ exports.oauthAccessToken = function (req, res, next) {
 						function (error, myself) {
 							console.log('myself', myself);
 							const user = {
-								jiraUsername: myself.name,
+								jiraAccountId: myself.accountId,
 								authId: auth._id
 							};
 
@@ -229,12 +229,16 @@ exports.oauthAccessToken = function (req, res, next) {
 								}
 
 								console.log('user', user);
-								var query = { jiraUsername: user.jiraUsername },
+								var query = { jiraAccountId: user.jiraAccountId },
 									options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
 								try {
 									model.user.findOneAndUpdate(query, user, options, function (error, result) {
-										if (error) res.status(400).send(error);
+										if (error) {
+											console.log('error', error);
+											res.status(400).send(error);
+											return;
+										}
 
 										var jwtInfo = {
 											authId: auth._id,

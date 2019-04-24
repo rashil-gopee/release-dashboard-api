@@ -13,7 +13,7 @@ exports.getUsers = function (req, res, next) {
 			});
 		}
 		else {
-			utils.jira.getJiraClient().user.getUser({ username: req.erm.result.jiraUsername }, function (error, response) {
+			utils.jira.getJiraClient().user.getUser({ username: req.erm.result.jiraAccountId }, function (error, response) {
 				for (var k in response) {
 					req.erm.result[k] = response[k];
 				}
@@ -24,7 +24,7 @@ exports.getUsers = function (req, res, next) {
 };
 
 function getJiraUserDetails(user, next) {
-	utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
+	utils.jira.getJiraClient().user.getUser({ accountId: user.jiraAccountId }, function (error, response) {
 		for (var k in response) {
 			user[k] = response[k];
 		}
