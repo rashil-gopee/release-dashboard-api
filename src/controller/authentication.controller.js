@@ -217,7 +217,6 @@ exports.oauthAccessToken = function (req, res, next) {
 						{
 						},
 						function (error, myself) {
-							console.log('myself', myself);
 							const user = {
 								jiraAccountId: myself.accountId,
 								authId: auth._id
@@ -235,7 +234,6 @@ exports.oauthAccessToken = function (req, res, next) {
 								try {
 									model.user.findOneAndUpdate(query, user, options, function (error, result) {
 										if (error) {
-											console.log('error', error);
 											res.status(400).send(error);
 											return;
 										}
