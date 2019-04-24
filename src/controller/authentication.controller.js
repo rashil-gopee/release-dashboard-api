@@ -157,7 +157,7 @@ exports.oauthToken = function (req, res, next) {
 		JIRA.KEY,
 		privateKeyData,
 		JIRA.OAUTH_VERSION,
-		'http://localhost:8080/sessions/callback',
+		'http://localhost:4200/auth',
 		JIRA.HASH_VERSION,
 		null,
 		'');
