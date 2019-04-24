@@ -218,7 +218,7 @@ exports.oauthAccessToken = function (req, res, next) {
 						},
 						function (error, myself) {
 							const user = {
-								jiraAccountId: myself.accountId,
+								jiraUsername: myself.name,
 								authId: auth._id
 							};
 
@@ -228,7 +228,7 @@ exports.oauthAccessToken = function (req, res, next) {
 								}
 
 								console.log('user', user);
-								var query = { jiraAccountId: user.jiraAccountId },
+								var query = { jiraUsername: user.jiraUsername },
 									options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
 								try {

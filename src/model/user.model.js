@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 
 var UserSchema = new Schema(
 	{
-		jiraAccountId: {
+		jiraUsername: {
 			type: String,
 			unique: true,
 			required: true

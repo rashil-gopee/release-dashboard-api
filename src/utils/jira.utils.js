@@ -43,7 +43,6 @@ exports.createJiraClient = function (req, callback) {
 					token_secret: auth.tokenSecret
 				}
 			});
-			// jiraClient.project.getProject
 			callback();
 		});
 	}
