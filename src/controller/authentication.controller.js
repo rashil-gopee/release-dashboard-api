@@ -247,6 +247,8 @@ exports.oauthAccessToken = function (req, res, next) {
 											user[k] = myself[k];
 										}
 
+										user.role = result.role;
+
 										res.status(200).json({
 											token: `Bearer ${jwt.sign(jwtInfo, config.secret)}`,
 											user: user
