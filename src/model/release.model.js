@@ -62,6 +62,10 @@ var releaseSchema = new Schema({
 	devsupport: {
 		type: String,
 		required: true
+	},
+	type: {
+		type: String,
+		required: true
 	}
 });
 
