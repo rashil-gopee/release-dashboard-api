@@ -7,6 +7,10 @@ var releaseSchema = new Schema({
 		type: Date,
 		required: true
 	},
+	releaseType: {
+		type: String,
+		required: true
+	},
 	projects: [{
 		projectId: {
 			type: String,
