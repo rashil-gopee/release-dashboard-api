@@ -21,7 +21,10 @@ var releaseSchema = new Schema({
 	}],
 	checklists: [{
 		checklistId: mongoose.Types.ObjectId,
-		value: Boolean,
+		value: {
+			type: Boolean,
+			default: false
+		},
 		dueDate: {
 			type: Date,
 			required: true
