@@ -17,13 +17,17 @@ var releaseSchema = new Schema({
 	}],
 	checklists: [{
 		checklistId: mongoose.Types.ObjectId,
-		value: Boolean
+		value: Boolean,
+		dueDate: {
+			type: Date,
+			required: true
+		}
 	}],
-	devfinish: {
+	devFinishDate: {
 		type: Date,
 		required: true
 	},
-	regressionDeploy: {
+	regressionDeployDate: {
 		type: Date,
 		required: false
 	},
@@ -31,11 +35,11 @@ var releaseSchema = new Schema({
 		type: Date,
 		required: true
 	},
-	regressionStart: {
+	regressionStartDate: {
 		type: Date,
 		required: true
 	},
-	regressionEnd: {
+	regressionEndDate: {
 		type: Date,
 		required: true
 	},
@@ -43,11 +47,11 @@ var releaseSchema = new Schema({
 		type: Date,
 		required: false
 	},
-	testenvironment: {
+	testEnvironment: {
 		type: String,
 		required: true
 	},
-	regenvironment: {
+	regEnvironment: {
 		type: String,
 		required: true
 	},
@@ -55,14 +59,25 @@ var releaseSchema = new Schema({
 		type: String,
 		required: true
 	},
+	deploymentChampion: {
+		name: {
+			type: String,
+			required: true
+		},
+		email: {
+			type: String,
+			required: true
+		}
+	},
 	sitecore: {
 		type: String,
 		required: true
 	},
-	devsupport: {
+	devSupport: {
 		type: String,
 		required: true
-	}
+	},
+	testResultsFileId: { type: Schema.Types.ObjectId }
 });
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);
