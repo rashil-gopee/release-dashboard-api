@@ -4,6 +4,9 @@ var fs = require('fs'),
 	Grid = require('gridfs-stream'),
 	config = require('../config/app.config');
 
+eval(`Grid.prototype.findOne = ${Grid.prototype.findOne.toString().replace('nextObject', 'next')}`);
+
+
 mongoose.Promise = global.Promise;
 
 var connection = mongoose.createConnection(config.mongodb);
@@ -30,7 +33,7 @@ var postFile = function (req, res) {
 			writestream.on('close', function (file) {
 				res.send(file);
 			});
-		}else if (files && files.file0) {
+		} else if (files && files.file0) {
 			var file = files.file0[0];
 
 			var fileId = mongoose.Types.ObjectId();
@@ -46,7 +49,7 @@ var postFile = function (req, res) {
 			writestream.on('close', function (file) {
 				res.send(file);
 			});
-		}  else {
+		} else {
 			res.send(400);
 		}
 
