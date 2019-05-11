@@ -30,7 +30,23 @@ var postFile = function (req, res) {
 			writestream.on('close', function (file) {
 				res.send(file);
 			});
-		} else {
+		}else if (files && files.file0) {
+			var file = files.file0[0];
+
+			var fileId = mongoose.Types.ObjectId();
+
+			var writestream = gfs.createWriteStream({
+				_id: fileId,
+				filename: file.originalFilename,
+				content_type: file.headers['content-type']
+			});
+
+			fs.createReadStream(file.path).pipe(writestream);
+
+			writestream.on('close', function (file) {
+				res.send(file);
+			});
+		}  else {
 			res.send(400);
 		}
 

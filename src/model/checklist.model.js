@@ -10,10 +10,6 @@ var checklistSchema = new Schema({
 	},
 	description: {
 		type: String
-	},
-	contactPerson: {
-		type: mongoose.Types.ObjectId,
-		required: true
 	}
 });
 

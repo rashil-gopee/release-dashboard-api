@@ -28,6 +28,10 @@ var releaseSchema = new Schema({
 		dueDate: {
 			type: Date,
 			required: true
+		},
+		contactPerson: {
+			type: mongoose.Types.ObjectId,
+			required: true
 		}
 	}],
 	devFinishDate: {
