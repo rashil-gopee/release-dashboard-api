@@ -67,14 +67,8 @@ var releaseSchema = new Schema({
 		required: true
 	},
 	deploymentChampion: {
-		name: {
-			type: String,
-			required: true
-		},
-		email: {
-			type: String,
-			required: true
-		}
+		type: mongoose.Types.ObjectId,
+		required: true
 	},
 	sitecore: {
 		type: String,
