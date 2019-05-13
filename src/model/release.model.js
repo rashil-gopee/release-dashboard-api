@@ -82,7 +82,20 @@ var releaseSchema = new Schema({
 		type: String,
 		required: true
 	},
-	testResultsFileId: { type: Schema.Types.ObjectId }
+	versioning: {
+		sitecore: {
+			type: String
+		},
+		SPA: {
+			type: String
+		},
+		biztalkWCF: {
+			type: String
+		}
+	},
+	testResults: [{
+		type: Schema.Types.ObjectId
+	}]
 });
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);

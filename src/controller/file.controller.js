@@ -17,24 +17,12 @@ var postFile = function (req, res) {
 	var form = new multiparty.Form();
 
 	form.parse(req, function (err, fields, files) {
-		if (files && files.file) {
-			var file = files.file[0];
-
-			var fileId = mongoose.Types.ObjectId();
-
-			var writestream = gfs.createWriteStream({
-				_id: fileId,
-				filename: file.originalFilename,
-				content_type: file.headers['content-type']
-			});
-
-			fs.createReadStream(file.path).pipe(writestream);
-
-			writestream.on('close', function (file) {
-				res.send(file);
-			});
-		} else if (files && files.file0) {
-			var file = files.file0[0];
+		if (files && (files.file || files.file0)) {
+			var file;
+			if (files.file)
+				file = files.file[0];
+			else
+				file = files.file0[0];
 
 			var fileId = mongoose.Types.ObjectId();
 
