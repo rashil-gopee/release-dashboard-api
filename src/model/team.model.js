@@ -9,7 +9,8 @@ var teamSchema = new Schema({
 		required: true,
 		unique: true
 	}
-});
+},
+{ timestamps: true });
 
 teamSchema = teamSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Team', teamSchema);

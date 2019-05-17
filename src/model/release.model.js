@@ -39,8 +39,7 @@ var releaseSchema = new Schema({
 		required: true
 	},
 	regressionDeployDate: {
-		type: Date,
-		required: false
+		type: Date
 	},
 	refreshDate: {
 		type: Date,
@@ -96,7 +95,8 @@ var releaseSchema = new Schema({
 	testResults: [{
 		type: Schema.Types.ObjectId
 	}]
-});
+},
+{ timestamps: true });
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Release', releaseSchema);

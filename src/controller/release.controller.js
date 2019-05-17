@@ -3,6 +3,11 @@
 const utils = require('../utils');
 const async = require('async');
 
+var editRelease = function (req, res, next) {
+	// console.log('req', req);
+	next();
+};
+
 var getReleases = function (req, res, next) {
 	utils.jira.createJiraClient(req, function () {
 		if (Array.isArray(req.erm.result)) {
@@ -125,3 +130,4 @@ function createVersion(version, next) {
 
 exports.getReleases = getReleases;
 exports.createVersions = createVersions;
+exports.editRelease = editRelease;

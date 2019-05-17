@@ -11,7 +11,8 @@ var checklistSchema = new Schema({
 	description: {
 		type: String
 	}
-});
+},
+{ timestamps: true });
 
 checklistSchema = checklistSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Checklist', checklistSchema);
