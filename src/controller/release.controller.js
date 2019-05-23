@@ -12,39 +12,44 @@ var editRelease = function (req, res, next) {
 		// req.body.checklists.forEach(checklist => {
 
 		// });
-		for (var i = 0; i < req.body.checklists.length; i++) {
-			if (req.body.checklists[i].value != release.checklists[i].value) {
+		if (req.body.checklists !== undefined && release !== null && release.checklists !== undefined) {
 
-				console.log('req.body.checklists[i].contactPerson', req.body.checklists[i].contactPerson);
-				model.user.findById(req.body.checklists[i].contactPerson, (err, user) => {
-					// console.log('user', user);
-					utils.jira.createJiraClient(req, function () {
-						utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
-							console.log('response', response);
+			for (var i = 0; i < req.body.checklists.length; i++) {
+				if (req.body.checklists[i].value != release.checklists[i].value) {
 
-							var subject = 'Reset Password';
-							var html =
-								'Checlist has been checked | unchecked.\n\n';
+					console.log('req.body.checklists[i].contactPerson', req.body.checklists[i].contactPerson);
+					model.user.findById(req.body.checklists[i].contactPerson, (err, user) => {
+						// console.log('user', user);
+						utils.jira.createJiraClient(req, function () {
+							utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
+								console.log('response', response);
 
-							utils.sendmail(response.emailAddress, subject, null, html, function (err, sent) {
-								if (err) return res.sendStatus(400);
+								var subject = 'Reset Password';
+								var html =
+									'Checlist has been checked | unchecked.\n\n';
+
+								utils.sendmail(response.emailAddress, subject, null, html, function (err, sent) {
+									if (err) return res.sendStatus(400);
+								});
+								// utils.sendmail()
+								// next();
 							});
-							// utils.sendmail()
-							// next();
 						});
 					});
-				});
 
-				// utils.jira.createJiraClient(req, function () {
-				// 	utils.jira.getJiraClient().user.getUser({ username: req.erm.result.jiraUsername }, function (error, response) {
-				// 		for (var k in response) {
-				// 			req.erm.result[k] = response[k];
-				// 		}
-				// 		next();
-				// 	});
-				// });
+					// utils.jira.createJiraClient(req, function () {
+					// 	utils.jira.getJiraClient().user.getUser({ username: req.erm.result.jiraUsername }, function (error, response) {
+					// 		for (var k in response) {
+					// 			req.erm.result[k] = response[k];
+					// 		}
+					// 		next();
+					// 	});
+					// });
 
+				}
 			}
+
+			
 		}
 	});
 

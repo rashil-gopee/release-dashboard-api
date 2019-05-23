@@ -56,10 +56,12 @@ var getFile = function (req, res) {
 				_id: file._id
 			});
 			res.set('Content-Type', file.contentType);
+			res.set('filename',file.filename);
 			readStream.pipe(res);
 		}
 	});
 };
+
 
 exports.postFile = postFile;
 exports.getFile = getFile;
