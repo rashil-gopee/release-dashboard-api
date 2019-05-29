@@ -8,8 +8,13 @@ var teamSchema = new Schema({
 		type: String,
 		required: true,
 		unique: true
+	},
+	email: {
+		type: String,
+		required: true
 	}
-});
+},
+{ timestamps: true });
 
 teamSchema = teamSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Team', teamSchema);

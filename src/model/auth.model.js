@@ -14,7 +14,8 @@ var authSchema = new Schema({
 		required: true,
 		unique: true
 	}
-});
+},
+{ timestamps: true });
 
 authSchema = authSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Auth', authSchema);

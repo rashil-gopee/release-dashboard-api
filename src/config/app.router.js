@@ -93,7 +93,7 @@ module.exports = function (app) {
 
 	//= ========================
 	// File Routes
-	//= ========================
+	//= ========================	
 
 	apiRoutes.use('/file', fileRoutes);
 
@@ -115,8 +115,10 @@ module.exports = function (app) {
 
 	restify.serve(srcRoutes, model.release, {
 		// preRead: controller.ReleaseController.getRelease,
+		preUpdate: controller.ReleaseController.editRelease,
 		preCreate: controller.ReleaseController.createVersions,
-		postRead: controller.ReleaseController.getReleases
+		postRead: controller.ReleaseController.getReleases,
+
 	});
 
 	// restify.serve(srcRoutes, model.release);

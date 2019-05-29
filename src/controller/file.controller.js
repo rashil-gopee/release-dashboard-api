@@ -4,6 +4,9 @@ var fs = require('fs'),
 	Grid = require('gridfs-stream'),
 	config = require('../config/app.config');
 
+eval(`Grid.prototype.findOne = ${Grid.prototype.findOne.toString().replace('nextObject', 'next')}`);
+
+
 mongoose.Promise = global.Promise;
 
 var connection = mongoose.createConnection(config.mongodb);
@@ -14,8 +17,12 @@ var postFile = function (req, res) {
 	var form = new multiparty.Form();
 
 	form.parse(req, function (err, fields, files) {
-		if (files && files.file) {
-			var file = files.file[0];
+		if (files && (files.file || files.file0)) {
+			var file;
+			if (files.file)
+				file = files.file[0];
+			else
+				file = files.file0[0];
 
 			var fileId = mongoose.Types.ObjectId();
 
@@ -49,10 +56,12 @@ var getFile = function (req, res) {
 				_id: file._id
 			});
 			res.set('Content-Type', file.contentType);
+			res.set('filename',file.filename);
 			readStream.pipe(res);
 		}
 	});
 };
+
 
 exports.postFile = postFile;
 exports.getFile = getFile;

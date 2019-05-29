@@ -31,3 +31,5 @@ function getJiraUserDetails(user, next) {
 		next(false, user);
 	});
 }
+
+exports.getJiraUserDetails = getJiraUserDetails;
