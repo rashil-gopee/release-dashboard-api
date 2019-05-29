@@ -81,13 +81,6 @@ var releaseSchema = new Schema({
 		type: mongoose.Types.ObjectId,
 		required: true
 	},
-<<<<<<< HEAD
-	type: {
-		type: String,
-		required: true
-	}
-});
-=======
 	versioning: {
 		sitecore: {
 			type: String
@@ -106,7 +99,6 @@ var releaseSchema = new Schema({
 	}]
 },
 { timestamps: true });
->>>>>>> origin/dev
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Release', releaseSchema);
