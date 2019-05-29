@@ -78,7 +78,7 @@ var releaseSchema = new Schema({
 		required: true
 	},
 	devSupport: {
-		type: String,
+		type: mongoose.Types.ObjectId,
 		required: true
 	},
 	versioning: {
@@ -93,7 +93,9 @@ var releaseSchema = new Schema({
 		}
 	},
 	testResults: [{
-		type: Schema.Types.ObjectId
+		fileId: {
+			type: Schema.Types.ObjectId
+		}
 	}]
 },
 { timestamps: true });

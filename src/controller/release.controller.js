@@ -1,8 +1,21 @@
 // const JiraClient = require('jira-connector');
 
+var fs = require('fs'),
+	mongoose = require('mongoose'),
+	multiparty = require('multiparty'),
+	Grid = require('gridfs-stream'),
+	config = require('../config/app.config');
+
 const utils = require('../utils');
 const async = require('async');
 const model = require('../model');
+
+eval(`Grid.prototype.findOne = ${Grid.prototype.findOne.toString().replace('nextObject', 'next')}`);
+
+
+mongoose.Promise = global.Promise;
+
+var connection = mongoose.createConnection(config.mongodb);
 
 var editRelease = function (req, res, next) {
 	// console.log('req', req);
@@ -49,7 +62,7 @@ var editRelease = function (req, res, next) {
 				}
 			}
 
-			
+
 		}
 	});
 
@@ -60,16 +73,77 @@ var getReleases = function (req, res, next) {
 	utils.jira.createJiraClient(req, function () {
 		if (Array.isArray(req.erm.result)) {
 			async.map(req.erm.result, getProjects, function (err, results) {
+				console.log('req.erm.result', req.erm.result);
 				next();
 			});
 		}
 		else {
 			async.map(req.erm.result.projects, getVersion, function (err, results) {
-				next();
+				// console.log('req.erm.result', req.erm.result);
+
+				async.map(req.erm.result.testResults, loadFileDetails, function (err, results) {
+					// console.log('req.erm.result', req.erm.result);
+
+
+					async.map(req.erm.result.checklists, loadChecklistContactUserDetails, function (err, results) {
+						console.log('req.erm.result', req.erm.result);
+
+						model.user.findById(req.erm.result.deploymentChampion, function (err, user) {
+							utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
+								req.erm.result.deploymentChampionUserDetails = response;
+
+								model.user.findById(req.erm.result.devSupport, function (err, user) {
+									utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
+										req.erm.result.devSupportUserDetails = response;
+										// return next(false, checklist);
+										next();
+									});
+								});
+								// return next(false, checklist);
+							});
+						});
+
+						// next();
+					});
+
+					// next();
+				});
+
+				// next();
 			});
 		}
 	});
 };
+
+function loadChecklistContactUserDetails(checklist, next) {
+	model.user.findById(checklist.contactPerson, function (err, user) {
+		utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
+			checklist.contactPersonUserDetails = response;
+			return next(false, checklist);
+		});
+	});
+}
+
+// function loadUserDetails(userId) {
+// 	model.user.findById(userId, function (err, user) {
+// 		console.log('user', user);
+// 		return user;
+// 	});
+// }
+
+function loadFileDetails(testResult, next) {
+	var gfs = Grid(connection.db, mongoose.mongo);
+	gfs.findOne({
+		_id: testResult.fileId
+	}, function (err, file) {
+		for (var property in file) {
+			if (file.hasOwnProperty(property)) {
+				testResult[property] = file[property];
+			}
+		}
+		next(false, testResult);
+	});
+}
 
 function getProjects(release, next) {
 	async.map(release.projects, getVersion, function (err, results) {
