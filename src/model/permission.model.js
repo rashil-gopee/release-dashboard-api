@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 	ROLE_SUPER_ADMIN = constant.ROLE_SUPER_ADMIN,
 	ROLE_USER = constant.ROLE_USER;
 
+// Permission schema as monogdb interface, this is used to map the users to either SuperAdmin or User
 var permissionSchema = new Schema({
 	subject: {
 		type: String,

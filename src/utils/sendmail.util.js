@@ -5,6 +5,15 @@ var config = require('../config/app.config'),
 	);
 
 module.exports = (function() {
+	/**
+	 * It sends an email to the given distination
+	 * @param {string} fromName Sender
+	 * @param {string} to Receiver
+	 * @param {string} subject Email title
+	 * @param {string} text Email content as a text
+	 * @param {string} html Email HTML formmated content
+	 * @param {string} cb Callback function
+	 */
 	var sendmail = function(to, subject, text, html, cb) {
 		var emailData = {
 			fromEmail: config.from_email,

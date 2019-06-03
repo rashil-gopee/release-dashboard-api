@@ -2,6 +2,7 @@ const mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	sanitizeJson = require('mongoose-sanitize-json');
 
+// Release schema as monogdb interface
 var releaseSchema = new Schema({
 	releaseDate: {
 		type: Date,
