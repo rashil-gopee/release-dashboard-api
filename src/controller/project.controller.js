@@ -17,4 +17,5 @@ var getProjects = function (req, res, next) {
 	});
 };
 
+// export functions to serve API functionalities
 exports.getProjects = getProjects;
