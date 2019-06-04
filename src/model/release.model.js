@@ -96,6 +96,11 @@ var releaseSchema = new Schema({
 		fileId: {
 			type: Schema.Types.ObjectId
 		}
+	}],
+	tips: [{
+		fileId: {
+			type: Schema.Types.ObjectId
+		}
 	}]
 },
 { timestamps: true });
