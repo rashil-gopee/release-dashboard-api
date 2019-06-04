@@ -11,6 +11,11 @@ mongoose.Promise = global.Promise;
 
 var connection = mongoose.createConnection(config.mongodb);
 
+/**
+ * It saves the uploaded file
+ * @param {object} req request from the client
+ * @param {object} res response back to the client
+ */
 var postFile = function (req, res) {
 	var gfs = Grid(connection.db, mongoose.mongo);
 
@@ -44,6 +49,11 @@ var postFile = function (req, res) {
 	});
 };
 
+/**
+ * It returns file with its details
+ * @param {object} req request from the client
+ * @param {object} res response back to the client
+ */
 var getFile = function (req, res) {
 	var gfs = Grid(connection.db, mongoose.mongo);
 	gfs.findOne({
@@ -62,6 +72,6 @@ var getFile = function (req, res) {
 	});
 };
 
-
+// export functions to serve API functionalities
 exports.postFile = postFile;
 exports.getFile = getFile;

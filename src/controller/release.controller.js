@@ -17,6 +17,12 @@ mongoose.Promise = global.Promise;
 
 var connection = mongoose.createConnection(config.mongodb);
 
+/**
+ * It edits a release information
+ * @param {object} req request from the client
+ * @param {object} res response back to the client
+ * @param {function} next function which should executed next
+ */
 var editRelease = function (req, res, next) {
 	// console.log('req', req);
 
@@ -69,6 +75,12 @@ var editRelease = function (req, res, next) {
 	next();
 };
 
+/**
+ * It fetches all the created releases in mongodb and maped them to JIRA ones
+ * @param {object} req request from the client
+ * @param {object} res response back to the client
+ * @param {function} next function which should executed next
+ */
 var getReleases = function (req, res, next) {
 	utils.jira.createJiraClient(req, function () {
 		if (Array.isArray(req.erm.result)) {
@@ -115,6 +127,11 @@ var getReleases = function (req, res, next) {
 	});
 };
 
+/**
+ * It loads a user detaails
+ * @param {object} checklist a check object
+ * @param {function} next function which should executed next
+ */
 function loadChecklistContactUserDetails(checklist, next) {
 	model.user.findById(checklist.contactPerson, function (err, user) {
 		utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
@@ -131,6 +148,11 @@ function loadChecklistContactUserDetails(checklist, next) {
 // 	});
 // }
 
+/**
+ * It loads file details, as "get file" would download the file not the details
+ * @param {object} testResult a check object
+ * @param {function} next function which should executed next
+ */
 function loadFileDetails(testResult, next) {
 	var gfs = Grid(connection.db, mongoose.mongo);
 	gfs.findOne({
@@ -145,6 +167,11 @@ function loadFileDetails(testResult, next) {
 	});
 }
 
+/**
+ * It loads all the porjects form JIRA which related to the given release
+ * @param {object} release a single release object
+ * @param {function} next function which should executed next
+ */
 function getProjects(release, next) {
 	async.map(release.projects, getVersion, function (err, results) {
 		next(false, results);
@@ -173,6 +200,11 @@ function getProjects(release, next) {
 // 		});
 // }
 
+/**
+ * It loads the version form JIRA which related to the given project
+ * @param {object} release a single release object
+ * @param {function} next function which should executed next
+ */
 function getVersion(project, next) {
 	utils.jira.getJiraClient().version.getVersion(
 		{
@@ -212,6 +244,12 @@ function getVersion(project, next) {
 // 	});
 // }
 
+/**
+ * It creates versions in JIRA JIRA which related to the projects in the request
+ * @param {object} req request from the client
+ * @param {object} res response back to the client
+ * @param {function} next function which should executed next
+ */
 var createVersions = function (req, res, next) {
 	utils.jira.createJiraClient(req, function () {
 		var versions = [];
@@ -237,6 +275,11 @@ var createVersions = function (req, res, next) {
 	});
 };
 
+/**
+ * It creates the given version in JIRA
+ * @param {object} version a single version object
+ * @param {function} next function which should executed next
+ */
 function createVersion(version, next) {
 	utils.jira.getJiraClient().version.createVersion({ version: version }, function (error, response) {
 		if (error) {
@@ -250,6 +293,7 @@ function createVersion(version, next) {
 	});
 }
 
+// export functions to serve API functionalities
 exports.getReleases = getReleases;
 exports.createVersions = createVersions;
 exports.editRelease = editRelease;

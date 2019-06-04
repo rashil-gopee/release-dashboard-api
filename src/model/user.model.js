@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 // = =============================== User Schema =
 // ===============================
 
+// User schema as monogdb interface	
 var UserSchema = new Schema(
 	{
 		jiraUsername: {
