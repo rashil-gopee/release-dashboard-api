@@ -305,7 +305,37 @@ function createVersion(version, next) {
 	});
 }
 
+
+function verifyReleaseChecklists() {
+	model.release.find({}, function (err, releases) {
+		for (let i = 0; i < releases.length; i++) {
+			for (let j = 0; j < releases[i].checklists.length; j++) {
+				if (releases[i].checklists[j].value == false && new Date(releases[i].checklists[j].dueDate) < new Date()) {
+					model.team.find({}, function (err, teams) {
+						teams.forEach(function (team) {
+							var subject = 'Release Checklist Alert';
+
+							var dueDate = new Date(releases[i].checklists[j].dueDate);
+							var formattedDate = dueDate.getDate() + '-' + (dueDate.getMonth() + 1) + '-' + dueDate.getFullYear();
+
+							model.checklist.findById(releases[i].checklists[j].checklistId, function (err, checklist) {
+								var html = checklist.name + ' Release Checklist was due on ' + formattedDate;
+
+								utils.sendmail(team.email, subject, null, html, function (err, sent) {
+									// if (err) return res.sendStatus(400);
+								});
+							});
+						});
+					});
+				}
+			}
+		}
+
+	});
+}
+
 // export functions to serve API functionalities
 exports.getReleases = getReleases;
 exports.createVersions = createVersions;
 exports.editRelease = editRelease;
+exports.verifyReleaseChecklists = verifyReleaseChecklists;
