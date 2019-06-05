@@ -35,11 +35,9 @@ promise
 		// Enable CORS from client-side
 		app.use(middleware.enableCors);
 
-		controller.ReleaseController.verifyReleaseChecklists();
-
-		// schedule.scheduleJob('0 10 * * *', function () {
-		// 	controller.ReleaseController.verifyReleaseChecklists();
-		// });
+		schedule.scheduleJob('0 10 * * *', function () {
+			controller.ReleaseController.verifyReleaseChecklists();
+		});
 
 		router(app);
 
