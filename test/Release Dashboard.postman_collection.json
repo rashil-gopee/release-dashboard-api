@@ -1,0 +1,932 @@
+{
+	"info": {
+		"_postman_id": "c051165b-895c-4122-92f1-6c774fd6ca1f",
+		"name": "Release Dashboard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all teams",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f573d1af-55f9-44cf-bc98-92306c12f1f8",
+						"exec": [
+							"//Aknowledgment: This code adapted from",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:6500/api/v1/team/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f7cee963-52e8-494b-a504-c8f0a2d06bb2",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:6500/api/v1/user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all checklist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f2ea736f-7251-485a-adda-52804bc7106a",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:6500/api/v1/project/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"project",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all projects",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2759243a-ecb8-45fa-828f-b9c1cc5d17c5",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all releases",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7e982927-70f6-496f-bcca-35a67955447c",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a specific release",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3f829a20-2dc7-436f-ac39-e3d2a7a69431",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"id = '5ceeb829a5e1731b8c7299f3'",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have the specified item\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData._id).to.eql(id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/5ceeb829a5e1731b8c7299f3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						"5ceeb829a5e1731b8c7299f3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new release (no name) -",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "35d530f6-505a-4b02-b4ed-2d6070978986",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"id = '5ceeb829a5e1731b8c7299f3'",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.not.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.be.error; ",
+							"    pm.response.to.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.not.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have the specified item\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData._id).to.eql(id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"releaseType\": \"OOC\",\n    \"releaseDate\": \"2019-07-19T00:00:00.000Z\",\n    \"devFinishDate\": \"2019-07-08T00:00:00.000Z\",\n    \"refreshDate\": \"2019-07-09T00:00:00.000Z\",\n    \"regressionDeployDate\": null,\n    \"regressionStartDate\": \"2019-07-09T00:00:00.000Z\",\n    \"regressionEndDate\": \"2019-07-15T00:00:00.000Z\",\n    \"testEnvironment\": \"CIO2\",\n    \"cabDate\": null,\n    \"regEnvironment\": \"LAB03\",\n    \"sitecore\": \"C5265\",\n    \"biztalk\": \"C5410\",\n    \"deploymentChampion\": \"5cc81cadba14afb51df8c11c\",\n    \"devSupport\": \"5cc81cadba14afb51df8c11c\",\n    \"projects\": [\n        {\n        \t\"projectId\": \"10004\"\n        },\n        {\n        \t\"projectId\": \"10005\"\n        },\n        {\n        \t\"projectId\": \"10003\"\n        },\n        { \n        \t\"projectId\": \"10006\"\n        }\n    ],\n    \"checklists\": [\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebdc\",\n            \"checklistId\": \"5ccbb8814a6797542df784f3\",\n            \"dueDate\": \"2019-07-11T00:00:00.000Z\"\n        },\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebdb\",\n            \"checklistId\": \"5ccbc39101958c5569b52bc3\",\n            \"dueDate\": \"2019-07-12T00:00:00.000Z\"\n        },\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebda\",\n            \"checklistId\": \"5ccbc6c001958c5569b52bc7\",\n            \"dueDate\": \"2019-07-13T00:00:00.000Z\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new release -",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6c4aff3-fa35-42b4-b205-87cff2151390",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.not.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.be.error; ",
+							"    pm.response.to.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.not.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"JulyOOC\",\n    \"releaseType\": \"OOC\",\n    \"releaseDate\": \"2019-07-19T00:00:00.000Z\",\n    \"devFinishDate\": \"2019-07-08T00:00:00.000Z\",\n    \"refreshDate\": \"2019-07-09T00:00:00.000Z\",\n    \"regressionDeployDate\": null,\n    \"regressionStartDate\": \"2019-07-09T00:00:00.000Z\",\n    \"regressionEndDate\": \"2019-07-15T00:00:00.000Z\",\n    \"testEnvironment\": \"CIO2\",\n    \"cabDate\": null,\n    \"regEnvironment\": \"LAB03\",\n    \"sitecore\": \"C5265\",\n    \"biztalk\": \"C5410\",\n    \"deploymentChampion\": \"5cc81cadba14afb51df8c11c\",\n    \"devSupport\": \"5cc81cadba14afb51df8c11c\",\n    \"projects\": [\n        {\n        \t\"projectId\": \"10004\"\n        },\n        {\n        \t\"projectId\": \"10005\"\n        },\n        {\n        \t\"projectId\": \"10003\"\n        },\n        { \n        \t\"projectId\": \"10006\"\n        }\n    ],\n    \"checklists\": [\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebdc\",\n            \"checklistId\": \"5ccbb8814a6797542df784f3\",\n            \"dueDate\": \"2019-07-11T00:00:00.000Z\"\n        },\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebdb\",\n            \"checklistId\": \"5ccbc39101958c5569b52bc3\",\n            \"dueDate\": \"2019-07-12T00:00:00.000Z\"\n        },\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebda\",\n            \"checklistId\": \"5ccbc6c001958c5569b52bc7\",\n            \"dueDate\": \"2019-07-13T00:00:00.000Z\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new release +",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"TestingOOC2\",\n    \"releaseType\": \"OOC\",\n    \"releaseDate\": \"2019-07-19T00:00:00.000Z\",\n    \"devFinishDate\": \"2019-07-08T00:00:00.000Z\",\n    \"refreshDate\": \"2019-07-09T00:00:00.000Z\",\n    \"regressionDeployDate\": null,\n    \"regressionStartDate\": \"2019-07-09T00:00:00.000Z\",\n    \"regressionEndDate\": \"2019-07-15T00:00:00.000Z\",\n    \"testEnvironment\": \"CIO2\",\n    \"cabDate\": null,\n    \"regEnvironment\": \"LAB03\",\n    \"sitecore\": \"C5265\",\n    \"biztalk\": \"C5410\",\n    \"deploymentChampion\": \"5cc81cadba14afb51df8c11c\",\n    \"devSupport\": \"5cc81cadba14afb51df8c11c\",\n    \"projects\": [\n        {\n        \t\"projectId\": \"10004\"\n        },\n        {\n        \t\"projectId\": \"10005\"\n        },\n        {\n        \t\"projectId\": \"10003\"\n        },\n        { \n        \t\"projectId\": \"10006\"\n        }\n    ],\n    \"checklists\": [\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebdc\",\n            \"checklistId\": \"5ccbb8814a6797542df784f3\",\n            \"contactPerson\" : \"5cc81cadba14afb51df8c11c\",\n            \"dueDate\": \"2019-07-11T00:00:00.000Z\"\n        },\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebdb\",\n            \"checklistId\": \"5ccbc39101958c5569b52bc3\",\n            \"contactPerson\" : \"5cc81cadba14afb51df8c11c\",\n            \"dueDate\": \"2019-07-12T00:00:00.000Z\"\n        },\n        {\n            \"value\": false,\n            \"_id\": \"5cd4fcd6190cc1bd1fedebda\",\n            \"checklistId\": \"5ccbc6c001958c5569b52bc7\",\n            \"contactPerson\" : \"5cc81cadba14afb51df8c11c\",\n            \"dueDate\": \"2019-07-13T00:00:00.000Z\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add a team +",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"jiraProjectId\" : \"5cca301d8efc5b83ed972166dddddd\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/team/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add an existing team -",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "edc5252f-b413-49ab-b7a6-02337729fb66",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is bad\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"response rises an error msg\", function () {",
+							"     pm.response.to.not.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.have.jsonBody(\"errmsg\"); ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"jiraProjectId\" : \"10005\",\n\t\"email\": \"rabbix@u.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/team/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add invalid team -",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e4406a5e-3b2c-435b-9f87-431f6f72c7fd",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is bad\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"",
+							"pm.test(\"response rises an error msg\", function () {",
+							"     pm.response.to.not.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.have.jsonBody(\"errors\"); ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"jiraProjectId\" :\"uiiuiejkfnjksdjnkfs\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/team/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user role",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"role\": \"SuperAdmin\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/user/5cca301d8efc5b83ed972166",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"5cca301d8efc5b83ed972166"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user role to Admin -",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"role\": \"Admin\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/user/5cca301d8efc5b83ed972166",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"5cca301d8efc5b83ed972166"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an existing team",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/team/5cca301d8efc5b83ed972166",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"team",
+						"5cca301d8efc5b83ed972166"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update versioning",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bd693bab-70c9-4723-a01a-6fe8f117aa79",
+						"exec": [
+							"//Aknowledgment:",
+							"//https://learning.getpostman.com/docs/postman/scripts/test_scripts/",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () { ",
+							"    pm.response.to.not.be.error; ",
+							"    pm.response.to.not.have.jsonBody(\"error\"); ",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"versioning\": {\n        \"SPA\": \"40.9.03.03\",\n        \"biztalkWCF\": \"0.2.9.2\",\n        \"sitecore\": \"9.0.3.4\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/5cf3bdb432450dd32f5f5705",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						"5cf3bdb432450dd32f5f5705"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update testing results",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI1Y2JmZTE3OTdkZDZmYTVkNTRlYmI1ODIiLCJhY2Nlc3NfdG9rZW4iOiJMWlMxZ1BzZGUyRllxbjI4OEFFVTNFektJbVNQNk5SbiIsImlhdCI6MTU1NjA3OTAwN30.bjWAVC6Pmk9GG9SCjDbGiv7jYgzN1XpOjjYZN_n5HxI"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"testResults\": [\n        \"5cdd2f3887544727b97c6785\",\n        \"5cdd2f7387544727b97c6789\",\n        \"5cde42931c76b319b4b120a2\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:6500/api/v1/release/5cd4fcd6190cc1bd1fedebd5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6500",
+					"path": [
+						"api",
+						"v1",
+						"release",
+						"5cd4fcd6190cc1bd1fedebd5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
