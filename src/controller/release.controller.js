@@ -36,20 +36,31 @@ var editRelease = function (req, res, next) {
 			for (var i = 0; i < req.body.checklists.length; i++) {
 				if (req.body.checklists[i].value != release.checklists[i].value) {
 
-					console.log('req.body.checklists[i].contactPerson', req.body.checklists[i].contactPerson);
+					// console.log('req.body.checklists[i].contactPerson', req.body.checklists[i].contactPerson);
 					model.user.findById(req.body.checklists[i].contactPerson, (err, user) => {
 						// console.log('user', user);
 						utils.jira.createJiraClient(req, function () {
 							utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
 								console.log('response', response);
 
-								var subject = 'Reset Password';
-								var html =
-									'Checlist has been checked | unchecked.\n\n';
+								model.checklist.findById(req.body.checklists[i]._id, function (err, checklist) {
+									var subject = checklist.name + ' Checklist Status Update';
+									var checkedValue;
 
-								utils.sendmail(response.emailAddress, subject, null, html, function (err, sent) {
-									if (err) return res.sendStatus(400);
+									if (release.checklists[i].value == true)
+										checkedValue = 'checked';
+									else
+										checkedValue = 'unchecked';
+
+									var html =
+										checklist[i].name + ' checklist for has been ' + checkedValue + '.\n\n';
+
+									utils.sendmail(response.emailAddress, subject, null, html, function (err, sent) {
+										if (err) return res.sendStatus(400);
+									});
 								});
+
+
 								// utils.sendmail()
 								// next();
 							});
@@ -95,24 +106,27 @@ var getReleases = function (req, res, next) {
 
 				async.map(req.erm.result.testResults, loadFileDetails, function (err, results) {
 					// console.log('req.erm.result', req.erm.result);
+					async.map(req.erm.result.tips, loadFileDetails, function (err, results) {
 
+						async.map(req.erm.result.checklists, loadChecklistContactUserDetails, function (err, results) {
+							console.log('req.erm.result', req.erm.result);
 
-					async.map(req.erm.result.checklists, loadChecklistContactUserDetails, function (err, results) {
-						console.log('req.erm.result', req.erm.result);
+							model.user.findById(req.erm.result.deploymentChampion, function (err, user) {
+								utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
+									req.erm.result.deploymentChampionUserDetails = response;
 
-						model.user.findById(req.erm.result.deploymentChampion, function (err, user) {
-							utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
-								req.erm.result.deploymentChampionUserDetails = response;
-
-								model.user.findById(req.erm.result.devSupport, function (err, user) {
-									utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
-										req.erm.result.devSupportUserDetails = response;
-										// return next(false, checklist);
-										next();
+									model.user.findById(req.erm.result.devSupport, function (err, user) {
+										utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
+											req.erm.result.devSupportUserDetails = response;
+											// return next(false, checklist);
+											next();
+										});
 									});
+									// return next(false, checklist);
 								});
-								// return next(false, checklist);
 							});
+
+							// next();
 						});
 
 						// next();
@@ -120,8 +134,6 @@ var getReleases = function (req, res, next) {
 
 					// next();
 				});
-
-				// next();
 			});
 		}
 	});
@@ -293,7 +305,37 @@ function createVersion(version, next) {
 	});
 }
 
+
+function verifyReleaseChecklists() {
+	model.release.find({}, function (err, releases) {
+		for (let i = 0; i < releases.length; i++) {
+			for (let j = 0; j < releases[i].checklists.length; j++) {
+				if (releases[i].checklists[j].value == false && new Date(releases[i].checklists[j].dueDate) < new Date()) {
+					model.team.find({}, function (err, teams) {
+						teams.forEach(function (team) {
+							var subject = 'Release Checklist Alert';
+
+							var dueDate = new Date(releases[i].checklists[j].dueDate);
+							var formattedDate = dueDate.getDate() + '-' + (dueDate.getMonth() + 1) + '-' + dueDate.getFullYear();
+
+							model.checklist.findById(releases[i].checklists[j].checklistId, function (err, checklist) {
+								var html = checklist.name + ' Release Checklist was due on ' + formattedDate;
+
+								utils.sendmail(team.email, subject, null, html, function (err, sent) {
+									// if (err) return res.sendStatus(400);
+								});
+							});
+						});
+					});
+				}
+			}
+		}
+
+	});
+}
+
 // export functions to serve API functionalities
 exports.getReleases = getReleases;
 exports.createVersions = createVersions;
 exports.editRelease = editRelease;
+exports.verifyReleaseChecklists = verifyReleaseChecklists;
