@@ -7,9 +7,11 @@ var mongoose = require('mongoose'),
 	middleware = require('./middleware'),
 	model = require('./model'),
 	methodOverride = require('method-override'),
-	app = express();
+	app = express(),
+	controller = require('./controller/index.js');
 
 var JiraClient = require('jira-connector');
+var schedule = require('node-schedule');
 
 // Database Setup
 
@@ -32,6 +34,10 @@ promise
 
 		// Enable CORS from client-side
 		app.use(middleware.enableCors);
+
+		schedule.scheduleJob('0 10 * * *', function () {
+			controller.ReleaseController.verifyReleaseChecklists();
+		});
 
 		router(app);
 

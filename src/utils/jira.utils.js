@@ -22,10 +22,16 @@ let privateKeyData = '-----BEGIN RSA PRIVATE KEY-----\n' +
 	'y3EUMWMNSV7tBa3mV8p30OD52BC7uS/oFznq5OgyLX9aeg==\n' +
 	'-----END RSA PRIVATE KEY-----';
 
+/**
+ * Get Jira client object
+ */
 exports.getJiraClient = function () {
 	return jiraClient;
 };
 
+/**
+ * Create Jira client object
+ */
 exports.createJiraClient = function (req, callback) {
 	var authHeader = req.headers['authorization'];
 	if (authHeader != null && authHeader.startsWith('Bearer')) {

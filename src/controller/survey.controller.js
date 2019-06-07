@@ -10,6 +10,12 @@ var jwt = require('jsonwebtoken'),
 	getRole = helper.getRole,
 	config = require('../config/app.config');
 
+/**
+ * It sends bulk emails based on the request specifications
+ * @param {object} req request from the client
+ * @param {object} res response back to the client
+ * @param {function} next function which should executed next
+ */
 exports.mailDistribute = function(req, res, next) {
 	// Check for registration errors
 	// const to = req.body.to;

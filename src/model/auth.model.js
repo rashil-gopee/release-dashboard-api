@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
 	sanitizeJson = require('mongoose-sanitize-json'),
 	constant = require('../config/app.constant');
 
+// Auth schema as monogdb interface
 var authSchema = new Schema({
 	oauthToken: {
 		type: String,
