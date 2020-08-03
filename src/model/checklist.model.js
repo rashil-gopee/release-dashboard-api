@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
 	sanitizeJson = require('mongoose-sanitize-json'),
 	constant = require('../config/app.constant');
 
+// Checklist schema as monogdb interface	
 var checklistSchema = new Schema({
 	name: {
 		type: String,
@@ -11,7 +12,8 @@ var checklistSchema = new Schema({
 	description: {
 		type: String
 	}
-});
+},
+{ timestamps: true });
 
 checklistSchema = checklistSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Checklist', checklistSchema);

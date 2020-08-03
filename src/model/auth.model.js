@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
 	sanitizeJson = require('mongoose-sanitize-json'),
 	constant = require('../config/app.constant');
 
+// Auth schema as monogdb interface
 var authSchema = new Schema({
 	oauthToken: {
 		type: String,
@@ -14,7 +15,8 @@ var authSchema = new Schema({
 		required: true,
 		unique: true
 	}
-});
+},
+{ timestamps: true });
 
 authSchema = authSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Auth', authSchema);

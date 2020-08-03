@@ -5,6 +5,13 @@ const async = require('async');
 //= =======================================
 // User Routes
 //= =======================================
+
+/**
+ * It loads all the users from JIRA.
+ * @param {object} req request from the client
+ * @param {object} res response back to the client
+ * @param {function} next function which should executed next
+ */
 exports.getUsers = function (req, res, next) {
 	utils.jira.createJiraClient(req, function () {
 		if (Array.isArray(req.erm.result)) {
@@ -23,6 +30,11 @@ exports.getUsers = function (req, res, next) {
 	});
 };
 
+/**
+ * It loads user details from JIRA which related from the given user).
+ * @param {object} project a single project to load
+ * @param {function} next function which should executed next
+ */
 function getJiraUserDetails(user, next) {
 	utils.jira.getJiraClient().user.getUser({ username: user.jiraUsername }, function (error, response) {
 		for (var k in response) {
@@ -31,3 +43,6 @@ function getJiraUserDetails(user, next) {
 		next(false, user);
 	});
 }
+
+// export functions to serve API functionalities
+exports.getJiraUserDetails = getJiraUserDetails;

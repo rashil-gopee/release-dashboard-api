@@ -5,6 +5,15 @@ var config = require('../config/app.config'),
 	);
 
 module.exports = (function() {
+	/**
+	 * It sends bulk email to the given distinations
+	 * @param {string} fromName Sender
+	 * @param {string} to Receiver(s)
+	 * @param {string} subject Email title
+	 * @param {string} text Email content as a text
+	 * @param {string} html Email HTML formmated content
+	 * @param {string} cb Callback function
+	 */
 	var bulkmail = function(fromName, to, subject, text, html, cb) {
 		var emailData = {
 			fromEmail: config.from_email,

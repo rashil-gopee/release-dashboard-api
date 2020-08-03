@@ -24,8 +24,8 @@ module.exports = function (app) {
 		srcRoutes = express.Router(),
 		fileRoutes = express.Router(),
 		surveyRoutes = express.Router(),
-		projectRoutes = express.Router(),
-		permissionRoutes = express.Router();
+		projectRoutes = express.Router();
+		// permissionRoutes = express.Router();
 
 	// Set url for API group routes
 	app.use('/api/v1', apiRoutes);
@@ -36,7 +36,7 @@ module.exports = function (app) {
 	// Set auth routes as subgroup/middleware to apiRoutes
 	apiRoutes.use('/auth', authRoutes);
 
-	apiRoutes.use('/permission', permissionRoutes);
+	// apiRoutes.use('/permission', permissionRoutes);
 
 	apiRoutes.use('/project', projectRoutes);
 
@@ -93,7 +93,7 @@ module.exports = function (app) {
 
 	//= ========================
 	// File Routes
-	//= ========================
+	//= ========================	
 
 	apiRoutes.use('/file', fileRoutes);
 
@@ -107,7 +107,7 @@ module.exports = function (app) {
 		postRead: controller.UserController.getUsers
 	});
 
-	restify.serve(srcRoutes, model.permission);
+	// restify.serve(srcRoutes, model.permission);
 
 	restify.serve(srcRoutes, model.team, {
 		postRead: controller.TeamController.getTeams
@@ -115,8 +115,10 @@ module.exports = function (app) {
 
 	restify.serve(srcRoutes, model.release, {
 		// preRead: controller.ReleaseController.getRelease,
+		preUpdate: controller.ReleaseController.editRelease,
 		preCreate: controller.ReleaseController.createVersions,
-		postRead: controller.ReleaseController.getReleases
+		postRead: controller.ReleaseController.getReleases,
+
 	});
 
 	// restify.serve(srcRoutes, model.release);

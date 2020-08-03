@@ -4,6 +4,10 @@ var moment = require('moment'),
 
 module.exports = function() {
 
+    /**
+     * It generates and encoded token for a given user
+     * @param {string} user username
+     */
     var generate = function(user) {
 
         var payload = {
@@ -16,6 +20,10 @@ module.exports = function() {
 
     };
 
+    /**
+     * Validates a given payload. It checks the expiration date.
+     * @param {object} payload 
+     */
     var isValid = function(payload) {
 
         var expiryDate = new Date(payload.expire);

@@ -2,9 +2,14 @@ const mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	sanitizeJson = require('mongoose-sanitize-json');
 
+// Release schema as monogdb interface
 var releaseSchema = new Schema({
 	releaseDate: {
 		type: Date,
+		required: true
+	},
+	releaseType: {
+		type: String,
 		required: true
 	},
 	projects: [{
@@ -17,25 +22,35 @@ var releaseSchema = new Schema({
 	}],
 	checklists: [{
 		checklistId: mongoose.Types.ObjectId,
-		value: Boolean
+		value: {
+			type: Boolean,
+			default: false
+		},
+		dueDate: {
+			type: Date,
+			required: true
+		},
+		contactPerson: {
+			type: mongoose.Types.ObjectId,
+			required: true
+		}
 	}],
-	devfinish: {
+	devFinishDate: {
 		type: Date,
 		required: true
 	},
-	regressionDeploy: {
-		type: Date,
-		required: false
+	regressionDeployDate: {
+		type: Date
 	},
 	refreshDate: {
 		type: Date,
 		required: true
 	},
-	regressionStart: {
+	regressionStartDate: {
 		type: Date,
 		required: true
 	},
-	regressionEnd: {
+	regressionEndDate: {
 		type: Date,
 		required: true
 	},
@@ -43,11 +58,11 @@ var releaseSchema = new Schema({
 		type: Date,
 		required: false
 	},
-	testenvironment: {
+	testEnvironment: {
 		type: String,
 		required: true
 	},
-	regenvironment: {
+	regEnvironment: {
 		type: String,
 		required: true
 	},
@@ -55,19 +70,41 @@ var releaseSchema = new Schema({
 		type: String,
 		required: true
 	},
+	deploymentChampion: {
+		type: mongoose.Types.ObjectId,
+		required: true
+	},
 	sitecore: {
 		type: String,
 		required: true
 	},
-	devsupport: {
-		type: String,
+	devSupport: {
+		type: mongoose.Types.ObjectId,
 		required: true
 	},
-	type: {
-		type: String,
-		required: true
-	}
-});
+	versioning: {
+		sitecore: {
+			type: String
+		},
+		SPA: {
+			type: String
+		},
+		biztalkWCF: {
+			type: String
+		}
+	},
+	testResults: [{
+		fileId: {
+			type: Schema.Types.ObjectId
+		}
+	}],
+	tips: [{
+		fileId: {
+			type: Schema.Types.ObjectId
+		}
+	}]
+},
+	{ timestamps: true });
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Release', releaseSchema);

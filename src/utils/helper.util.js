@@ -4,7 +4,9 @@ var constant = require('../config/app.constant'),
 	ROLE_OWNER = constant.ROLE_OWNER,
 	ROLE_ADMIN = constant.ROLE_ADMIN;
 
-// Set user info from request
+/**
+ * Set user info from request
+ */
 exports.setUserInfo = function setUserInfo(request) {
 	var getUserInfo = {
 		_id: request._id,
@@ -17,6 +19,9 @@ exports.setUserInfo = function setUserInfo(request) {
 	return getUserInfo;
 };
 
+/**
+ * Get role mapping number
+ */
 exports.getRole = function getRole(checkRole) {
 	let role;
 
