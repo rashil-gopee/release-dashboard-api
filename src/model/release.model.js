@@ -103,8 +103,7 @@ var releaseSchema = new Schema({
 			type: Schema.Types.ObjectId
 		}
 	}]
-},
-	{ timestamps: true });
+}, { timestamps: true });
 
 releaseSchema = releaseSchema.plugin(sanitizeJson);
 module.exports = mongoose.model('Release', releaseSchema);
